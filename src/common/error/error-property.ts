@@ -1,4 +1,4 @@
 export interface ErrorProperty {
-    status: number;
-    message: string;
+  status: number;
+  message: string;
 }

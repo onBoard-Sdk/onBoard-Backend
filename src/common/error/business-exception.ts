@@ -1,5 +1,5 @@
-import {ErrorProperty} from "./error-property";
+import { ErrorProperty } from './error-property';
 
 export class BusinessException extends Error {
-    readonly errorProperty: ErrorProperty
+  readonly errorProperty: ErrorProperty;
 }
