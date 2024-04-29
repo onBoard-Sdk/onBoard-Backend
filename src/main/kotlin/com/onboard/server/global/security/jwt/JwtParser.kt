@@ -1,6 +1,7 @@
 package com.onboard.server.global.security.jwt
 
 import com.onboard.server.global.exception.InternalServerErrorException
+import com.onboard.server.global.security.auth.AuthDetailsService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Header.JWT_TYPE
