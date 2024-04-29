@@ -5,3 +5,10 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ADDRESS}
+    password: ${EMAIL_PASSWORD}
+    default-encoding: UTF-8
