@@ -1,6 +1,8 @@
 package com.onboard.server.domain.auth.controller
 
 import com.onboard.server.domain.auth.controller.dto.SendAuthCodeRequest
+import com.onboard.server.domain.auth.controller.dto.SignInRequest
+import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.service.AuthService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/api/v1/auth")
 @RestController
-class AuthCodeController(
-    private val authService: AuthService
+class AuthController(
+    private val authService: AuthService,
 ) {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/codes")
@@ -26,4 +28,8 @@ class AuthCodeController(
     fun certifyAuthCode(@RequestParam authCode: String, @RequestParam email: String) {
         authService.certifyAuthCode(authCode, email)
     }
+
+    @PostMapping("/sign-in")
+    fun signIn(@RequestBody request: SignInRequest): TokenInfo =
+        authService.signIn(request.email, request.password)
 }

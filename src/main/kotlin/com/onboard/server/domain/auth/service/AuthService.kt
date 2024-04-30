@@ -2,15 +2,23 @@ package com.onboard.server.domain.auth.service
 
 import com.onboard.server.domain.auth.domain.AuthCode
 import com.onboard.server.domain.auth.domain.AuthCodeRepository
+import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.exception.AuthCodeNotFoundException
+import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.exception.TeamNotFoundException
+import com.onboard.server.global.security.jwt.JwtProvider
 import com.onboard.server.thirdparty.email.EmailService
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
     private val authCodeRepository: AuthCodeRepository,
     private val emailService: EmailService,
+    private val teamRepository: TeamRepository,
+    private val passwordEncoder: PasswordEncoder,
+    private val jwtProvider: JwtProvider,
 ) {
     fun sendAuthCode(email: String) {
         // TODO("이미 등록된 이메일인지 확인")
@@ -29,5 +37,13 @@ class AuthService(
         authCodeRepository.findByIdOrNull(code)
             ?.apply { checkMine(email) }
             ?: throw AuthCodeNotFoundException
+    }
+
+    fun signIn(email: String, password: String): TokenInfo {
+        val team = (teamRepository.findByEmail(email)
+            ?.apply { passwordEncoder.matches(password, this.password) }
+            ?: throw TeamNotFoundException)
+
+        return jwtProvider.generateAllToken(team.id)
     }
 }
