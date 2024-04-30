@@ -12,3 +12,15 @@ spring:
     username: ${EMAIL_ADDRESS}
     password: ${EMAIL_PASSWORD}
     default-encoding: UTF-8
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jwt:
+  secret-key: ${SECRET_KEY}
+  access-exp: ${ACCESS_EXP}
+  refresh_exp: ${REFRESH_EXP}
