@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 @MappedSuperclass
 abstract class BaseEntity {
     @CreatedDate
-    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
     var createdDateTime: LocalDateTime = LocalDateTime.MIN
         protected set
 
