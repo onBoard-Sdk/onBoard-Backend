@@ -12,11 +12,12 @@ class JavaMailSenderService(
     val sender: String,
 ) : EmailService {
     override fun send(code: String, to: String) {
-        SimpleMailMessage().apply {
+        val message = SimpleMailMessage().apply {
             from = sender
             setTo(to)
             subject = "onBoard 인증 코드입니다."
             text = code
         }
+        javaMailSender.send(message)
     }
 }
