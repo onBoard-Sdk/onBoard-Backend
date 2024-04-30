@@ -6,7 +6,8 @@ import com.onboard.server.global.filter.JwtFilter
 import com.onboard.server.global.security.jwt.JwtParser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
+import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpMethod.POST
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -29,8 +30,13 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers(HttpMethod.POST, "api/v1/auth/codes").permitAll()
-                    .requestMatchers(HttpMethod.GET, "api/v1/auth/codes").permitAll()
+                    // auth
+                    .requestMatchers(POST, "api/v1/auth/codes").permitAll()
+                    .requestMatchers(GET, "api/v1/auth/codes").permitAll()
+                    .requestMatchers(POST, "api/v1/auth/sign-in").permitAll()
+
+                    // team
+                    .requestMatchers(POST, "api/v1/teams/sign-up").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(JwtFilter(jwtParser), UsernamePasswordAuthenticationFilter::class.java)
