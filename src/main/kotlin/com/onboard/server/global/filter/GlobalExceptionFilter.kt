@@ -3,6 +3,7 @@ package com.onboard.server.global.filter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.onboard.server.global.error.BusinessException
 import com.onboard.server.global.error.ErrorResponse
+import com.onboard.server.global.exception.InternalServerErrorException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -22,6 +23,12 @@ class GlobalExceptionFilter(
             filterChain.doFilter(request, response)
         } catch (e: BusinessException) {
             setErrorResponse(e.status, e.message, response)
+        } catch (e: Exception) {
+            setErrorResponse(
+                status = InternalServerErrorException.status,
+                message = e.message ?: InternalServerErrorException.message,
+                response = response
+            )
         }
     }
 
