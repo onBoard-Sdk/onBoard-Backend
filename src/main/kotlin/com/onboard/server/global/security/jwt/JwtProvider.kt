@@ -16,13 +16,13 @@ class JwtProvider(
     private val jwtProperties: JwtProperties,
     private val refreshTokenRepository: RefreshTokenRepository,
 ) {
-    fun generateAllToken(id: String): TokenInfo {
-        val accessToken = generateAccessToken(id)
-        val refreshToken = generateRefreshToken(id)
+    fun generateAllToken(id: Long): TokenInfo {
+        val accessToken = generateAccessToken(id.toString())
+        val refreshToken = generateRefreshToken(id.toString())
 
         refreshTokenRepository.save(
             RefreshToken(
-                accountId = id,
+                userId = id,
                 token = refreshToken
             )
         )

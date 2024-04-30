@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.index.Indexed
 @RedisHash(value = "refreshToken", timeToLive = 60 * 60 * 24 * 14)
 class RefreshToken(
     @Id
-    val accountId: String,
+    val userId: Long,
 
     token: String
 ) {
