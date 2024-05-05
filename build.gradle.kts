@@ -93,3 +93,7 @@ tasks.register<Copy>("installGitHooks") {
     into(file("$rootDir/.git/hooks"))
     fileMode = "0775".toInt()
 }
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
+}
