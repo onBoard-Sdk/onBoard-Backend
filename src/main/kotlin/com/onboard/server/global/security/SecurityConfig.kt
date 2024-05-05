@@ -30,6 +30,9 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { authorize ->
                 authorize
+                    // health check
+                    .requestMatchers(GET, "/health-check").permitAll()
+
                     // auth
                     .requestMatchers(POST, "api/v1/auth/codes").permitAll()
                     .requestMatchers(GET, "api/v1/auth/codes").permitAll()
