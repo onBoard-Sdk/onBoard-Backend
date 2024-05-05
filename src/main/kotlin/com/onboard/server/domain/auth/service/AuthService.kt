@@ -5,6 +5,7 @@ import com.onboard.server.domain.auth.domain.AuthCodeRepository
 import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.exception.AuthCodeNotFoundException
 import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.exception.TeamAlreadyExistsException
 import com.onboard.server.domain.team.exception.TeamNotFoundException
 import com.onboard.server.global.security.jwt.JwtProvider
 import com.onboard.server.thirdparty.email.EmailService
@@ -21,7 +22,12 @@ class AuthService(
     private val jwtProvider: JwtProvider,
 ) {
     fun sendAuthCode(email: String) {
-        // TODO("이미 등록된 이메일인지 확인")
+        if (teamRepository.existsByEmail(email)) {
+            throw TeamAlreadyExistsException
+        }
+
+        val size = authCodeRepository.countByEmail(email)
+        AuthCode.checkMaxRequestLimit(size)
 
         val savedAuthCode = authCodeRepository.save(
             AuthCode(
@@ -34,15 +40,17 @@ class AuthService(
     }
 
     fun certifyAuthCode(code: String, email: String) {
-        authCodeRepository.findByIdOrNull(code)
+        val authCode = (authCodeRepository.findByIdOrNull(code)
             ?.apply { checkMine(email) }
-            ?: throw AuthCodeNotFoundException
+            ?: throw AuthCodeNotFoundException)
+
+        authCodeRepository.save(authCode.certify())
     }
 
     fun signIn(email: String, password: String): TokenInfo {
-        val team = (teamRepository.findByEmail(email)
+        val team = teamRepository.findByEmail(email)
             ?.apply { passwordEncoder.matches(password, this.password) }
-            ?: throw TeamNotFoundException)
+            ?: throw TeamNotFoundException
 
         return jwtProvider.generateAllToken(team.id)
     }

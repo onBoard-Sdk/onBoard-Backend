@@ -1,6 +1,8 @@
 package com.onboard.server.domain.team.service
 
+import com.onboard.server.domain.auth.domain.AuthCodeRepository
 import com.onboard.server.domain.auth.domain.TokenInfo
+import com.onboard.server.domain.auth.exception.NeverCertifyException
 import com.onboard.server.domain.team.controller.dto.SignUpRequest
 import com.onboard.server.domain.team.domain.Team
 import com.onboard.server.domain.team.domain.TeamRepository
@@ -11,11 +13,16 @@ import org.springframework.stereotype.Service
 
 @Service
 class TeamService(
+    private val authCodeRepository: AuthCodeRepository,
     private val teamRepository: TeamRepository,
     private val jwtProvider: JwtProvider,
     private val passwordEncoder: PasswordEncoder,
 ) {
     fun singUp(request: SignUpRequest): TokenInfo {
+        if (authCodeRepository.findAllByEmail(request.email).all { !it.getIsVerified }) {
+            throw NeverCertifyException
+        }
+
         if (teamRepository.existsByEmail(request.email)) {
             throw TeamAlreadyExistsException
         }
