@@ -26,8 +26,9 @@ class AuthService(
             throw TeamAlreadyExistsException
         }
 
-        val size = authCodeRepository.countByEmail(email)
-        AuthCode.checkMaxRequestLimit(size)
+        authCodeRepository.countByEmail(email)?.let {
+            AuthCode.checkMaxRequestLimit(it)
+        }
 
         val savedAuthCode = authCodeRepository.save(
             AuthCode(
