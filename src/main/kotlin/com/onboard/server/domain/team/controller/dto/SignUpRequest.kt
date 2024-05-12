@@ -12,10 +12,4 @@ data class SignUpRequest(
     @field:Size(min = 6, max = 20)
     @field:NotBlank
     val password: String,
-
-    @field:Size(max = 50)
-    @field:NotBlank
-    val name: String,
-
-    val logoImageUrl: String // TODO : 기본 이미지 추가
 )

@@ -19,10 +19,8 @@ class Team(
     @Column(nullable = false, columnDefinition = "char(60)")
     val password: String,
 
-    @Column(nullable = false, columnDefinition = "varchar(50)")
-    val name: String,
+    @Column(columnDefinition = "varchar(50)")
+    private var name: String? = null,
 
-    @Column(nullable = false)
-    val logoImageUrl: String,
-) : BaseEntity() {
-}
+    private var logoImageUrl: String? = null,
+) : BaseEntity()
