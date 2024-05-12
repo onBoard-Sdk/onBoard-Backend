@@ -9,6 +9,7 @@ import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.Date
 
 @Component
@@ -27,10 +28,14 @@ class JwtProvider(
             )
         )
 
-        return TokenInfo(
-            accessToken,
-            refreshToken,
-        )
+        return LocalDateTime.now().let {
+            TokenInfo(
+                accessToken = accessToken,
+                accessTokenExpirationTime = it.plusSeconds(jwtProperties.accessExp),
+                refreshToken = refreshToken,
+                refreshTokenExpirationTime = it.plusSeconds(jwtProperties.refreshExp)
+            )
+        }
     }
 
     fun generateAccessToken(id: String) = generateToken(
