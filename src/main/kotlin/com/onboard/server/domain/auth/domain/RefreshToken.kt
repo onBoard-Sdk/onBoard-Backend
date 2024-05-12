@@ -9,12 +9,11 @@ class RefreshToken(
     @Id
     val userId: Long,
 
-    token: String
-) {
     @Indexed
-    private var token = token
-
-    val getToken = token
+    private var token: String
+) {
+    val getToken
+        get() = token
 
     fun updateToken(token: String) {
         this.token = token
