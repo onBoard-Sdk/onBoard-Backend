@@ -18,5 +18,30 @@ spring:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: qaz
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: username
+    password: password
+    default-encoding: UTF-8
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 logging.level:
   org.hibernate.SQL: debug
+
+jwt:
+  secret-key: ${SECRET_KEY:qwertyuiopasdfghjkl;zxcvbnm,qwertyuioasdfghjklzxcvbnm,asdfghjkqwertyuio}
+  access-exp: ${ACCESS_EXP:180}
+  refresh_exp: ${REFRESH_EXP:360}
