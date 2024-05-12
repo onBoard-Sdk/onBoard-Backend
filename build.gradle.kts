@@ -58,8 +58,9 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
     testImplementation("io.kotest:kotest-assertions-core:${property("kotestVersion")}")
     testImplementation("io.mockk:mockk:${property("mockkVersion")}")
-    testImplementation("it.ozimov:embedded-redis:${property("embeddedRedisVersion")}")
-    runtimeOnly("com.h2database:h2")
+    testImplementation("com.ninja-squad:springmockk:${property("springmockkVersion")}")
+    testImplementation("com.github.codemonstur:embedded-redis:${property("embeddedRedisVersion")}")
+    testRuntimeOnly("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {
