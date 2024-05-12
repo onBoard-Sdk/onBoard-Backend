@@ -44,7 +44,7 @@ class AuthCode(
         }.toString()
 
         fun checkMaxRequestLimit(count: Int) {
-            if (count > MAX_REQUEST_LIMIT) throw AuthCodeOverLimitException
+            if (count + 1 > MAX_REQUEST_LIMIT) throw AuthCodeOverLimitException
         }
     }
 }
