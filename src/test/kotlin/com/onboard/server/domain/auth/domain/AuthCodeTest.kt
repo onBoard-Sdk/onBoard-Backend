@@ -66,7 +66,7 @@ class AuthCodeTest : DescribeSpec({
 
     describe("checkMaxRequestLimit") {
         context("최대 요청 횟수를 넘으면") {
-            val count = MAX_REQUEST_LIMIT + 1
+            val count = MAX_REQUEST_LIMIT
 
             it("유효 시간이 지날 때 까지 인증을 더 이상 할 수 없다") {
                 shouldThrow<AuthCodeOverLimitException> {
