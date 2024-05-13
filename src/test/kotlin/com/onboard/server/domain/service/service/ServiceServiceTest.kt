@@ -196,5 +196,57 @@ class ServiceServiceTest : DescribeSpec() {
                 }
             }
         }
+
+        this.describe("getAll") {
+            val savedTeam = teamRepository.save(
+                Team(
+                    email = "email",
+                    password = "password",
+                    name = "name",
+                    logoImageUrl = "logoImageUrl"
+                )
+            )
+
+            serviceRepository.saveAll(
+                listOf(
+                    Service(
+                        team = savedTeam,
+                        name = "name1",
+                        logoImageUrl = "logoImageUrl1",
+                        serviceUrl = "serviceUrl1",
+                    ),
+                    Service(
+                        team = savedTeam,
+                        name = "name2",
+                        logoImageUrl = "logoImageUrl2",
+                        serviceUrl = "serviceUrl2",
+                    )
+                )
+            )
+
+            val subject = Subject(savedTeam.id)
+
+            it("자신의 모든 서비스를 가져온다") {
+                val result = serviceService.getAll(subject)
+
+                result.services.apply {
+                    this[0].name shouldBe "name1"
+                    this[0].logoImageUrl shouldBe "logoImageUrl1"
+                    this[0].serviceUrl shouldBe "serviceUrl1"
+
+                    this[1].name shouldBe "name2"
+                    this[1].logoImageUrl shouldBe "logoImageUrl2"
+                    this[1].serviceUrl shouldBe "serviceUrl2"
+                }
+            }
+
+            context("팀을 찾지 못하면") {
+                it("서비스 목록을 조회할 수 없다") {
+                    shouldThrow<TeamNotFoundException> {
+                        serviceService.getAll(temporarySubject)
+                    }
+                }
+            }
+        }
     }
 }
