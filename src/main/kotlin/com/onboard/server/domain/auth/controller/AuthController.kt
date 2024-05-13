@@ -4,6 +4,7 @@ import com.onboard.server.domain.auth.controller.dto.SendAuthCodeRequest
 import com.onboard.server.domain.auth.controller.dto.SignInRequest
 import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.service.AuthService
+import com.onboard.server.global.common.ApiResponse
 import jakarta.validation.constraints.NotNull
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
@@ -37,14 +38,18 @@ class AuthController(
         authService.certifyAuthCode(authCode, email)
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/sign-in")
-    fun signIn(@RequestBody request: SignInRequest): TokenInfo =
-        authService.signIn(request.email, request.password)
+    fun signIn(@RequestBody request: SignInRequest): ApiResponse<TokenInfo> =
+        ApiResponse.ok(authService.signIn(request.email, request.password))
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/reissue")
-    fun reissue(@RequestHeader("refresh-token") @NotNull refreshToken: String): TokenInfo {
-        return if (refreshToken.contains("Bearer "))
+    fun reissue(@RequestHeader("refresh-token") @NotNull refreshToken: String): ApiResponse<TokenInfo> {
+        val tokenInfo = if (refreshToken.contains("Bearer "))
             authService.reissue(refreshToken.replace("Bearer ", ""))
         else authService.reissue(refreshToken)
+
+        return ApiResponse.noContent(tokenInfo)
     }
 }
