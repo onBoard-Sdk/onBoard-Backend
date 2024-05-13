@@ -1,6 +1,6 @@
 package com.onboard.server.global.common
 
-import com.onboard.server.domain.team.domain.CurrentTeam
+import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.global.security.jwt.JwtParser
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
@@ -15,7 +15,7 @@ class UserArgumentResolver(
     private val jwtParser: JwtParser,
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean =
-        parameter.parameterType == CurrentTeam::class.java
+        parameter.parameterType == Subject::class.java
 
     override fun resolveArgument(
         parameter: MethodParameter,
@@ -29,6 +29,6 @@ class UserArgumentResolver(
             jwtParser.getSubject(it)
         }
 
-        return CurrentTeam(userId!!)
+        return Subject(userId!!)
     }
 }
