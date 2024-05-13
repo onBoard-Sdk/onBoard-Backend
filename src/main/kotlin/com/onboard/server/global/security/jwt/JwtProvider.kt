@@ -8,6 +8,7 @@ import com.onboard.server.global.security.jwt.JwtConstant.REFRESH
 import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.util.Date
@@ -21,12 +22,14 @@ class JwtProvider(
         val accessToken = generateAccessToken(id.toString())
         val refreshToken = generateRefreshToken(id.toString())
 
-        refreshTokenRepository.save(
-            RefreshToken(
-                userId = id,
-                token = refreshToken
+        refreshTokenRepository.findByIdOrNull(id)
+            ?.updateToken(refreshToken)
+            ?: refreshTokenRepository.save(
+                RefreshToken(
+                    userId = id,
+                    token = refreshToken
+                )
             )
-        )
 
         return LocalDateTime.now().let {
             TokenInfo(

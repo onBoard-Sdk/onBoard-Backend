@@ -18,6 +18,10 @@ object AuthCodeNotFoundException : BusinessException(404, "인증 코드를 찾�
     private fun readResolve(): Any = AuthCodeNotFoundException
 }
 
+object RefreshTokenNotFoundException : BusinessException(404, "Refresh Token을 찾지 못했습니다.") {
+    private fun readResolve(): Any = RefreshTokenNotFoundException
+}
+
 object AuthCodeAlreadyCertifyException : BusinessException(409, "이미 인증된 코드입니다.") {
     private fun readResolve(): Any = AuthCodeAlreadyCertifyException
 }

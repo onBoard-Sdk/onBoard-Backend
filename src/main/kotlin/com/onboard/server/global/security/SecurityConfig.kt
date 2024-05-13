@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpMethod.POST
+import org.springframework.http.HttpMethod.PUT
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -37,10 +38,12 @@ class SecurityConfig(
                     .requestMatchers(POST, "api/v1/auth/codes").permitAll()
                     .requestMatchers(GET, "api/v1/auth/codes").permitAll()
                     .requestMatchers(POST, "api/v1/auth/sign-in").permitAll()
+                    .requestMatchers(PUT, "api/v1/auth/reissue").permitAll()
 
                     // team
                     .requestMatchers(POST, "api/v1/teams/sign-up").permitAll()
-                    .anyRequest().authenticated()
+
+                    .anyRequest().denyAll()
             }
             .addFilterBefore(JwtFilter(jwtParser), UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(GlobalExceptionFilter(objectMapper), JwtFilter::class.java)

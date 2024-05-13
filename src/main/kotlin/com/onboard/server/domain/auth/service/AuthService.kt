@@ -2,8 +2,10 @@ package com.onboard.server.domain.auth.service
 
 import com.onboard.server.domain.auth.domain.AuthCode
 import com.onboard.server.domain.auth.domain.AuthCodeRepository
+import com.onboard.server.domain.auth.domain.RefreshTokenRepository
 import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.exception.AuthCodeNotFoundException
+import com.onboard.server.domain.auth.exception.RefreshTokenNotFoundException
 import com.onboard.server.domain.auth.exception.WrongAuthInfoException
 import com.onboard.server.domain.team.domain.TeamRepository
 import com.onboard.server.domain.team.exception.TeamAlreadyExistsException
@@ -12,7 +14,6 @@ import com.onboard.server.thirdparty.email.EmailService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AuthService(
@@ -21,6 +22,7 @@ class AuthService(
     private val teamRepository: TeamRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtProvider: JwtProvider,
+    private val refreshTokenRepository: RefreshTokenRepository,
 ) {
     fun sendAuthCode(email: String) {
         if (teamRepository.existsByEmail(email)) throw TeamAlreadyExistsException
@@ -46,7 +48,6 @@ class AuthService(
         authCodeRepository.save(authCode)
     }
 
-    @Transactional
     fun signIn(email: String, password: String): TokenInfo {
         val team = teamRepository.findByEmail(email)
             ?.apply {
@@ -54,5 +55,12 @@ class AuthService(
             } ?: throw WrongAuthInfoException
 
         return jwtProvider.generateAllToken(team.id)
+    }
+
+    fun reissue(refreshToken: String): TokenInfo {
+        val savedRefreshToken = refreshTokenRepository.findByToken(refreshToken)
+            ?: throw RefreshTokenNotFoundException
+
+        return jwtProvider.generateAllToken(savedRefreshToken.userId)
     }
 }
