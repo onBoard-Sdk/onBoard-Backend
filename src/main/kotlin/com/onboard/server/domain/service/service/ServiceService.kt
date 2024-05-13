@@ -2,8 +2,10 @@ package com.onboard.server.domain.service.service
 
 import com.onboard.server.domain.service.controller.dto.CreateServiceRequest
 import com.onboard.server.domain.service.controller.dto.CreateServiceResponse
+import com.onboard.server.domain.service.controller.dto.GetAllServicesResponse
 import com.onboard.server.domain.service.controller.dto.ModifyServiceRequest
 import com.onboard.server.domain.service.controller.dto.ModifyServiceResponse
+import com.onboard.server.domain.service.controller.dto.ServiceElement
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
@@ -56,5 +58,17 @@ class ServiceService(
             } ?: throw ServiceNotFoundException
 
         return ModifyServiceResponse(modifiedService.id)
+    }
+
+    @Transactional
+    fun remove(subject: Subject, serviceId: Long) {
+        teamRepository.findByIdOrNull(subject.id)
+            ?: throw TeamNotFoundException
+
+        serviceRepository.findByIdOrNull(serviceId)
+            ?.apply { checkMine(subject) }
+            ?: throw ServiceNotFoundException
+
+        serviceRepository.deleteById(serviceId)
     }
 }
