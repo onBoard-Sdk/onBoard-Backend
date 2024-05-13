@@ -1,7 +1,10 @@
 package com.onboard.server.domain.service.service
 
 import com.onboard.server.domain.service.controller.dto.CreateServiceRequest
+import com.onboard.server.domain.service.controller.dto.ModifyServiceRequest
+import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.service.domain.ServiceRepository
+import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.Team
 import com.onboard.server.domain.team.domain.TeamRepository
@@ -33,9 +36,8 @@ class ServiceServiceTest : DescribeSpec() {
             teamRepository.deleteAllInBatch()
         }
 
+        val temporarySubject = Subject(-1)
         this.describe("create") {
-            val subject = Subject(1L)
-
             val request = CreateServiceRequest(
                 name = "onBoard",
                 logoImageUrl = "logoImageUrl",
@@ -43,7 +45,7 @@ class ServiceServiceTest : DescribeSpec() {
             )
 
             context("서비스 정보를 받으면") {
-                teamRepository.save(
+                val savedTeam = teamRepository.save(
                     Team(
                         email = "email",
                         password = "password",
@@ -52,8 +54,10 @@ class ServiceServiceTest : DescribeSpec() {
                     )
                 )
 
+                val subject = Subject(savedTeam.id)
+
                 it("서비스 생성에 성공한다") {
-                    serviceService.create(request, subject)
+                    serviceService.create(subject, request)
                         .apply {
                             serviceId shouldNotBe 0
                         }
@@ -61,9 +65,73 @@ class ServiceServiceTest : DescribeSpec() {
             }
 
             context("서비스를 생성하는 팀의 정보를 찾지 못하면") {
-                it("예외가 발생한다") {
+                it("서비스 생성에 실패한다") {
                     shouldThrow<TeamNotFoundException> {
-                        serviceService.create(request, subject)
+                        serviceService.create(temporarySubject, request)
+                    }
+                }
+            }
+        }
+
+        this.describe("modify") {
+            val request = ModifyServiceRequest(
+                name = "onBoard",
+                logoImageUrl = "logoImageUrl",
+                serviceUrl = "localhost"
+            )
+
+            context("서비스 정보를 받으면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val savedService = serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = request.name,
+                        logoImageUrl = request.logoImageUrl,
+                        serviceUrl = request.serviceUrl,
+                    )
+                )
+
+                val subject = Subject(savedService.id)
+
+                it("서비스 수정에 성공한다") {
+                    serviceService.modify(subject, savedService.id, request)
+                        .apply {
+                            serviceId shouldNotBe 0
+                        }
+                }
+            }
+
+            context("서비스를 수정하는 팀의 정보를 찾지 못하면") {
+                it("서비스 수정에 실패한다") {
+                    shouldThrow<TeamNotFoundException> {
+                        serviceService.modify(temporarySubject, 0, request)
+                    }
+                }
+            }
+
+            context("수정하고자 하는 서비스를 찾지 못하면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val subject = Subject(savedTeam.id)
+
+                it("서비스 수정에 실패한다") {
+                    shouldThrow<ServiceNotFoundException> {
+                        serviceService.modify(subject, 0, request)
                     }
                 }
             }
