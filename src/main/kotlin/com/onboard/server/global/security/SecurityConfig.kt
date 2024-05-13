@@ -7,6 +7,7 @@ import com.onboard.server.global.security.jwt.JwtParser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpMethod.PATCH
 import org.springframework.http.HttpMethod.POST
 import org.springframework.http.HttpMethod.PUT
 import org.springframework.security.config.Customizer
@@ -45,6 +46,7 @@ class SecurityConfig(
 
                     // service
                     .requestMatchers(POST, "api/v1/services").authenticated()
+                    .requestMatchers(PATCH, "api/v1/services/{serviceId}").authenticated()
 
                     .anyRequest().denyAll()
             }
