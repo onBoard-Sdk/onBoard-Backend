@@ -12,13 +12,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import com.onboard.server.global.security.jwt.JwtConstant.ACCESS
+import jakarta.servlet.http.HttpServletRequest
 
 @Component
 class JwtParser(
     private val jwtProperties: JwtProperties,
     private val authDetailsService: AuthDetailsService
 ) {
-
     fun getAuthentication(token: String): Authentication {
         val claims = getClaims(token).apply {
             if (header[JWT_TYPE] != ACCESS) {
@@ -29,6 +29,26 @@ class JwtParser(
         val userDetails = authDetailsService.loadUserByUsername(claims.body.subject)
 
         return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
+    }
+
+    fun getToken(request: HttpServletRequest): String? {
+        val token = request.getHeader(JwtConstant.HEADER)
+
+        return if (token != null && token.startsWith(JwtConstant.PREFIX)) {
+            token.substring(JwtConstant.PREFIX.length)
+        } else {
+            null
+        }
+    }
+
+    fun getSubject(token: String): Long {
+        val claims = getClaims(token).apply {
+            if (header[JWT_TYPE] != ACCESS) {
+                throw InvalidTokenException
+            }
+        }
+
+        return claims.body.subject.toLong()
     }
 
     private fun getClaims(token: String): Jws<Claims> {

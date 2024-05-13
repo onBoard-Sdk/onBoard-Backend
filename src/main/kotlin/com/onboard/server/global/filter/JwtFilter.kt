@@ -17,20 +17,10 @@ class JwtFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val token = getToken(request)
+        val token = jwtParser.getToken(request)
         token?.let {
             SecurityContextHolder.getContext().authentication = jwtParser.getAuthentication(token)
         }
         filterChain.doFilter(request, response)
-    }
-
-    private fun getToken(request: HttpServletRequest): String? {
-        val token = request.getHeader(HEADER)
-
-        return if (token != null && token.startsWith(PREFIX)) {
-            token.substring(PREFIX.length)
-        } else {
-            null
-        }
     }
 }
