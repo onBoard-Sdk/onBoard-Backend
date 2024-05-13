@@ -1,5 +1,8 @@
 package com.onboard.server.domain.service.domain
 
+
+import com.onboard.server.domain.service.exception.ServiceCannotModifyException
+import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.Team
 import com.onboard.server.global.entity.BaseEntity
 import jakarta.persistence.Column
@@ -29,4 +32,24 @@ class Service(
 
     @Column(nullable = false)
     private var serviceUrl: String,
-) : BaseEntity()
+) : BaseEntity() {
+    val getName
+        get() = name
+
+    val getLogoImageUrl
+        get() = logoImageUrl
+
+    val getServiceUrl
+        get() = serviceUrl
+
+    fun modify(subject: Subject, name: String, logoImageUrl: String, serviceUrl: String) {
+        checkMine(subject)
+        this.name = name
+        this.logoImageUrl = logoImageUrl
+        this.serviceUrl = serviceUrl
+    }
+
+    fun checkMine(subject: Subject) {
+        if (this.team.id != subject.id) throw ServiceCannotModifyException
+    }
+}

@@ -2,8 +2,11 @@ package com.onboard.server.domain.service.service
 
 import com.onboard.server.domain.service.controller.dto.CreateServiceRequest
 import com.onboard.server.domain.service.controller.dto.CreateServiceResponse
+import com.onboard.server.domain.service.controller.dto.ModifyServiceRequest
+import com.onboard.server.domain.service.controller.dto.ModifyServiceResponse
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.service.domain.ServiceRepository
+import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.TeamRepository
 import com.onboard.server.domain.team.exception.TeamNotFoundException
@@ -16,7 +19,8 @@ class ServiceService(
     private val serviceRepository: ServiceRepository,
     private val teamRepository: TeamRepository,
 ) {
-    fun create(request: CreateServiceRequest, subject: Subject): CreateServiceResponse {
+    @Transactional
+    fun create(subject: Subject, request: CreateServiceRequest): CreateServiceResponse {
         val currentTeam = teamRepository.findByIdOrNull(subject.id)
             ?: throw TeamNotFoundException
 
@@ -30,5 +34,27 @@ class ServiceService(
         )
 
         return CreateServiceResponse(savedService.id)
+    }
+
+    @Transactional
+    fun modify(
+        subject: Subject,
+        serviceId: Long,
+        request: ModifyServiceRequest,
+    ): ModifyServiceResponse {
+        teamRepository.findByIdOrNull(subject.id)
+            ?: throw TeamNotFoundException
+
+        val modifiedService = serviceRepository.findByIdOrNull(serviceId)
+            ?.apply {
+                modify(
+                    subject = subject,
+                    name = request.name,
+                    logoImageUrl = request.logoImageUrl,
+                    serviceUrl = request.serviceUrl
+                )
+            } ?: throw ServiceNotFoundException
+
+        return ModifyServiceResponse(modifiedService.id)
     }
 }
