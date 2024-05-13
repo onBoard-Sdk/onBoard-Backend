@@ -3,8 +3,11 @@ package com.onboard.server.domain.auth.service
 import com.ninjasquad.springmockk.MockkBean
 import com.onboard.server.domain.auth.domain.AuthCode
 import com.onboard.server.domain.auth.domain.AuthCodeRepository
+import com.onboard.server.domain.auth.domain.RefreshToken
+import com.onboard.server.domain.auth.domain.RefreshTokenRepository
 import com.onboard.server.domain.auth.exception.AuthCodeNotFoundException
 import com.onboard.server.domain.auth.exception.AuthCodeOverLimitException
+import com.onboard.server.domain.auth.exception.RefreshTokenNotFoundException
 import com.onboard.server.domain.auth.exception.WrongAuthInfoException
 import com.onboard.server.domain.team.domain.Team
 import com.onboard.server.domain.team.domain.TeamRepository
@@ -43,12 +46,16 @@ class AuthServiceTest : DescribeSpec() {
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
+    @Autowired
+    private lateinit var refreshTokenRepository: RefreshTokenRepository
+
     private val email = "alsdl0629@dsm.hs.kr"
 
     init {
         this.afterTest {
             teamRepository.deleteAllInBatch()
             authCodeRepository.deleteAll()
+            refreshTokenRepository.deleteAll()
         }
 
         this.describe("sendAuthCode") {
@@ -165,6 +172,36 @@ class AuthServiceTest : DescribeSpec() {
                 it("로그인에 실패한다") {
                     shouldThrow<WrongAuthInfoException> {
                         authService.signIn(email, wrongPassword)
+                    }
+                }
+            }
+        }
+
+        this.describe("reissue") {
+            val refreshToken = "refreshToken"
+
+            context("Refresh Token으로 객체를 찾으면") {
+                refreshTokenRepository.save(
+                    RefreshToken(
+                        userId = 1L,
+                        token = refreshToken
+                    )
+                )
+
+                it("Access, Refresh Token을 갱신하고, 반환한다") {
+                    authService.reissue(refreshToken).apply {
+                        accessToken shouldNotBe null
+                        accessTokenExpirationTime shouldBeAfter LocalDateTime.now()
+                        this.refreshToken shouldNotBe refreshToken
+                        refreshTokenExpirationTime shouldBeAfter LocalDateTime.now()
+                    }
+                }
+            }
+
+            context("Refresh Token으로 객체를 찾지 못하면") {
+                it("토큰 재발급에 실패한다") {
+                    shouldThrow<RefreshTokenNotFoundException> {
+                        authService.reissue(refreshToken)
                     }
                 }
             }
