@@ -43,6 +43,9 @@ class SecurityConfig(
                     // team
                     .requestMatchers(POST, "api/v1/teams/sign-up").permitAll()
 
+                    // service
+                    .requestMatchers(POST, "api/v1/services").authenticated()
+
                     .anyRequest().denyAll()
             }
             .addFilterBefore(JwtFilter(jwtParser), UsernamePasswordAuthenticationFilter::class.java)
