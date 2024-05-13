@@ -10,7 +10,7 @@ import com.onboard.server.global.exception.MethodNotAllowedException
 data class ErrorResponse(
     val status: Int,
     val message: String,
-    val fieldErrors: List<FieldError>,
+    val data: List<FieldError>,
 ) {
     companion object {
         fun of(bindingResult: BindingResult) = of(
@@ -60,19 +60,19 @@ data class ErrorResponse(
         fun of(e: BusinessException) = ErrorResponse(
             status = e.status,
             message = e.message,
-            fieldErrors = emptyList()
+            data = emptyList()
         )
 
         fun of(status: Int, message: String) = ErrorResponse(
             status = status,
             message = message,
-            fieldErrors = emptyList()
+            data = emptyList()
         )
 
         private fun of(e: BusinessException, fieldErrors: List<FieldError>) = ErrorResponse(
             status = e.status,
             message = e.message,
-            fieldErrors = fieldErrors
+            data = fieldErrors
         )
     }
 }
