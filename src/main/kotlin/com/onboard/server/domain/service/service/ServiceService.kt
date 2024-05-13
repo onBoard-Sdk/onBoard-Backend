@@ -71,4 +71,22 @@ class ServiceService(
 
         serviceRepository.deleteById(serviceId)
     }
+
+
+
+    fun getAll(subject: Subject): GetAllServicesResponse {
+        teamRepository.findByIdOrNull(subject.id)
+            ?: throw TeamNotFoundException
+
+        val services = serviceRepository.findAllByTeamId(subject.id)
+            .map {
+                ServiceElement(
+                    name = it.getName,
+                    logoImageUrl = it.getLogoImageUrl,
+                    serviceUrl = it.getServiceUrl
+                )
+            }
+
+        return GetAllServicesResponse(services)
+    }
 }
