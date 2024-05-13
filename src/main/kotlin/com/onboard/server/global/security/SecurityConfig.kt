@@ -6,6 +6,7 @@ import com.onboard.server.global.filter.JwtFilter
 import com.onboard.server.global.security.jwt.JwtParser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod.DELETE
 import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpMethod.PATCH
 import org.springframework.http.HttpMethod.POST
@@ -47,6 +48,8 @@ class SecurityConfig(
                     // service
                     .requestMatchers(POST, "api/v1/services").authenticated()
                     .requestMatchers(PATCH, "api/v1/services/{serviceId}").authenticated()
+                    .requestMatchers(DELETE, "api/v1/services/{serviceId}").authenticated()
+                    .requestMatchers(GET, "api/v1/services").authenticated()
 
                     .anyRequest().denyAll()
             }
