@@ -22,7 +22,7 @@ jobs:
           distribution: 'zulu'
 
       - name: Run test
-        run: ./gradlew test
+        run: ./gradlew test --debug
 
       - name: Run build
         run: ./gradlew build -x test
