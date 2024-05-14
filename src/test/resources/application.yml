@@ -45,3 +45,15 @@ jwt:
   secret-key: ${SECRET_KEY:qwertyuiopasdfghjkl;zxcvbnm,qwertyuioasdfghjklzxcvbnm,asdfghjkqwertyuio}
   access-exp: ${ACCESS_EXP:180}
   refresh_exp: ${REFRESH_EXP:360}
+
+cloud:
+  aws:
+    credentials:
+      access-key: access-key
+      secret-key: secret-key
+    region:
+      auto: false
+    stack:
+      auto: false
+    s3:
+      bucket: bucket

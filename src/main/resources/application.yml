@@ -20,6 +20,18 @@ spring:
           starttls:
             enable: true
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS}
+      secret-key: ${AWS_SECRET}
+    region:
+      auto: false
+    stack:
+      auto: false
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+
 jwt:
   secret-key: ${SECRET_KEY}
   access-exp: ${ACCESS_EXP}
