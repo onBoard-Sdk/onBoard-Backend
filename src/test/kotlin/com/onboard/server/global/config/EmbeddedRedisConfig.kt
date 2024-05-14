@@ -8,7 +8,6 @@ import redis.embedded.RedisServer
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-
 @TestConfiguration
 class EmbeddedRedisConfig(
     @Value("\${spring.data.redis.port}")
@@ -19,7 +18,11 @@ class EmbeddedRedisConfig(
     @PostConstruct
     fun startRedis() {
         val port = if (isRedisRunning()) findAvailablePort() else redisPort
-        redisServer = RedisServer(port)
+        redisServer = RedisServer.newRedisServer()
+            .port(port)
+            .setting("maxmemory 128M")
+            .build()
+
         redisServer.start()
     }
 
