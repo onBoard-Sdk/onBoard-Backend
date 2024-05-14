@@ -30,7 +30,7 @@ class Service(
     @Column(nullable = false)
     private var logoImageUrl: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private var serviceUrl: String,
 ) : BaseEntity() {
     val getName
