@@ -18,7 +18,7 @@ class RedisConfig(
         val redisConfiguration = RedisStandaloneConfiguration().apply {
             hostName = redisProperties.host
             port = redisProperties.port
-            redisProperties.password.let {
+            redisProperties.password?.let {
                 password = RedisPassword.of(it)
             }
         }
