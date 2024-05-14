@@ -4,7 +4,6 @@ import com.onboard.server.global.exception.InternalServerErrorException
 import com.onboard.server.global.security.auth.AuthDetailsService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.Header.JWT_TYPE
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
@@ -12,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import com.onboard.server.global.security.jwt.JwtConstant.ACCESS
+import io.jsonwebtoken.Header.TYPE
 import jakarta.servlet.http.HttpServletRequest
 
 @Component
@@ -20,13 +20,9 @@ class JwtParser(
     private val authDetailsService: AuthDetailsService
 ) {
     fun getAuthentication(token: String): Authentication {
-        val claims = getClaims(token).apply {
-            if (header[JWT_TYPE] != ACCESS) {
-                throw InvalidTokenException
-            }
-        }
+        val subject = getSubject(token)
 
-        val userDetails = authDetailsService.loadUserByUsername(claims.body.subject)
+        val userDetails = authDetailsService.loadUserByUsername(subject.toString())
 
         return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
     }
@@ -43,7 +39,7 @@ class JwtParser(
 
     fun getSubject(token: String): Long {
         val claims = getClaims(token).apply {
-            if (header[JWT_TYPE] != ACCESS) {
+            if (header[TYPE] != ACCESS) {
                 throw InvalidTokenException
             }
         }
