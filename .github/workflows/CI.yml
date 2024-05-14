@@ -22,7 +22,7 @@ jobs:
           distribution: 'zulu'
 
       - name: Run test
-        run: SPRING_PROFILES_ACTIVE=test ./gradlew test
+        run: ./gradlew test
 
       - name: Run build
         run: ./gradlew build -x test
