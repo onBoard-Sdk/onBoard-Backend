@@ -18,7 +18,9 @@ class RedisConfig(
         val redisConfiguration = RedisStandaloneConfiguration().apply {
             hostName = redisProperties.host
             port = redisProperties.port
-            password = RedisPassword.of(redisProperties.password)
+            redisProperties.password.let {
+                password = RedisPassword.of(it)
+            }
         }
 
         return LettuceConnectionFactory(redisConfiguration)

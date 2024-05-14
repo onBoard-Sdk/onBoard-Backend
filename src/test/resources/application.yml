@@ -22,7 +22,6 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password: qaz
 
   mail:
     host: smtp.gmail.com
