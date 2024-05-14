@@ -51,6 +51,9 @@ class SecurityConfig(
                     .requestMatchers(DELETE, "api/v1/services/{serviceId}").authenticated()
                     .requestMatchers(GET, "api/v1/services").authenticated()
 
+                    // file
+                    .requestMatchers(POST, "api/v1/files").authenticated()
+
                     .anyRequest().denyAll()
             }
             .addFilterBefore(JwtFilter(jwtParser), UsernamePasswordAuthenticationFilter::class.java)
