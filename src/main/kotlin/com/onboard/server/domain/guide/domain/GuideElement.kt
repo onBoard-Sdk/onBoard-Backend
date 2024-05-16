@@ -14,7 +14,7 @@ import jakarta.persistence.ManyToOne
 class GuideElement(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0L,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guide_id", nullable = false)
@@ -23,10 +23,16 @@ class GuideElement(
     @Column(nullable = false, unique = true, columnDefinition = "TINYINT UNSIGNED")
     private var sequence: Int,
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(191)")
+    private var summary: String,
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
+    private var title: String,
+
     @Column(nullable = false)
     private var description: String,
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
+    @Column(nullable = false)
     private var shape: String,
 
     @Column(nullable = false, columnDefinition = "MEDIUMINT")
