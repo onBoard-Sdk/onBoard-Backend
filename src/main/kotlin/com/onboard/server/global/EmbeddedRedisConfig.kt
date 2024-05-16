@@ -1,14 +1,16 @@
-package com.onboard.server.global.config
+package com.onboard.server.global
 
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import redis.embedded.RedisServer
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-@TestConfiguration
+@Profile("!prod", "!local")
+@Configuration
 class EmbeddedRedisConfig(
     @Value("\${spring.data.redis.port}")
     private val redisPort: Int,
@@ -23,7 +25,7 @@ class EmbeddedRedisConfig(
             .setting("maxmemory 128M")
             .build()
 
-        redisServer.start()
+        try { redisServer.start() } catch (e: Exception) { e.printStackTrace() }
     }
 
     @PreDestroy
