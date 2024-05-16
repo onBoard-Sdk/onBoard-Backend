@@ -2,6 +2,7 @@ package com.onboard.server.domain.auth.service
 
 import com.onboard.server.domain.auth.domain.AuthCode
 import com.onboard.server.domain.auth.domain.AuthCodeRepository
+import com.onboard.server.domain.auth.domain.RefreshToken
 import com.onboard.server.domain.auth.domain.RefreshTokenRepository
 import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.exception.AuthCodeNotFoundException
@@ -54,13 +55,24 @@ class AuthService(
                 if (!passwordEncoder.matches(password, this.password)) throw WrongAuthInfoException
             } ?: throw WrongAuthInfoException
 
-        return jwtProvider.generateAllToken(team.id)
+        return jwtProvider.generateAllToken(team.id).apply {
+            refreshTokenRepository.save(
+                RefreshToken(
+                    userId = team.id,
+                    token = refreshToken,
+                )
+            )
+        }
     }
 
     fun reissue(refreshToken: String): TokenInfo {
         val savedRefreshToken = refreshTokenRepository.findByToken(refreshToken)
             ?: throw RefreshTokenNotFoundException
 
-        return jwtProvider.generateAllToken(savedRefreshToken.userId)
+        return jwtProvider.generateAllToken(savedRefreshToken.userId).apply {
+            refreshTokenRepository.save(
+                savedRefreshToken.updateToken(this.refreshToken)
+            )
+        }
     }
 }

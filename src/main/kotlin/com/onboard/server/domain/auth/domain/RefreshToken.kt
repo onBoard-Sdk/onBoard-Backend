@@ -15,7 +15,8 @@ class RefreshToken(
     val getToken
         get() = token
 
-    fun updateToken(token: String) {
+    fun updateToken(token: String): RefreshToken {
         this.token = token
+        return this
     }
 }

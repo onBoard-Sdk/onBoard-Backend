@@ -43,13 +43,7 @@ class AuthController(
     fun signIn(@RequestBody request: SignInRequest): ApiResponse<TokenInfo> =
         ApiResponse.ok(authService.signIn(request.email, request.password))
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/reissue")
-    fun reissue(@RequestHeader("refresh-token") @NotNull refreshToken: String): ApiResponse<TokenInfo> {
-        val tokenInfo = if (refreshToken.contains("Bearer "))
-            authService.reissue(refreshToken.replace("Bearer ", ""))
-        else authService.reissue(refreshToken)
-
-        return ApiResponse.noContent(tokenInfo)
-    }
+    fun reissue(@RequestHeader("refresh-token") @NotNull refreshToken: String): ApiResponse<TokenInfo> =
+        ApiResponse.ok(authService.reissue(refreshToken))
 }
