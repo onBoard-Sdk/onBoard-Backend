@@ -53,7 +53,6 @@ dependencies {
     // aws
     implementation("com.amazonaws:aws-java-sdk-s3:${property("s3Version")}")
 
-
     // test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
@@ -63,7 +62,7 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:${property("kotestVersion")}")
     testImplementation("io.mockk:mockk:${property("mockkVersion")}")
     testImplementation("com.ninja-squad:springmockk:${property("springmockkVersion")}")
-    testImplementation("com.github.codemonstur:embedded-redis:${property("embeddedRedisVersion")}")
+    implementation("com.github.codemonstur:embedded-redis:${property("embeddedRedisVersion")}")
     testRuntimeOnly("com.h2database:h2")
 }
 
