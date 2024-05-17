@@ -101,7 +101,7 @@ class ServiceServiceTest : DescribeSpec() {
                     )
                 )
 
-                val subject = Subject(savedService.id)
+                val subject = Subject(savedTeam.id)
 
                 it("서비스 수정에 성공한다") {
                     serviceService.modify(subject, savedService.id, request)
