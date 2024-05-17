@@ -54,6 +54,9 @@ class SecurityConfig(
                     // file
                     .requestMatchers(POST, "api/v1/files").authenticated()
 
+                    // guide
+                    .requestMatchers(POST, "api/v1/guides").authenticated()
+
                     .anyRequest().denyAll()
             }
             .addFilterBefore(JwtFilter(jwtParser), UsernamePasswordAuthenticationFilter::class.java)
