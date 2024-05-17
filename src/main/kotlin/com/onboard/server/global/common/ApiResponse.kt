@@ -8,17 +8,16 @@ data class ApiResponse<T>(
     val data: T,
 ) {
     companion object {
-        fun <T> of(data: T, status: HttpStatus): ApiResponse<T> =
-            ApiResponse(
-                status = status.value(),
-                message = status.reasonPhrase,
-                data = data,
-            )
-
         fun <T> ok(data: T): ApiResponse<T> = of(data, HttpStatus.OK)
 
         fun <T> create(data: T): ApiResponse<T> = of(data, HttpStatus.CREATED)
 
         fun <T> noContent(data: T): ApiResponse<T> = of(data, HttpStatus.NO_CONTENT)
+        private fun <T> of(data: T, status: HttpStatus): ApiResponse<T> =
+            ApiResponse(
+                status = status.value(),
+                message = status.reasonPhrase,
+                data = data,
+            )
     }
 }
