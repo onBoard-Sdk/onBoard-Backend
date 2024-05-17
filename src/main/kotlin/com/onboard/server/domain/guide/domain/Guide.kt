@@ -1,5 +1,6 @@
 package com.onboard.server.domain.guide.domain
 
+import com.onboard.server.domain.guide.exception.CannotCreateGuideException
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.global.entity.BaseEntity
 import jakarta.persistence.Column
@@ -15,7 +16,7 @@ import jakarta.persistence.ManyToOne
 class Guide(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0L,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id", nullable = false)
@@ -25,5 +26,11 @@ class Guide(
     private var title: String,
 
     @Column(nullable = false, columnDefinition = "VARCHAR(50)")
-    private var path: String
-) : BaseEntity()
+    private var path: String,
+) : BaseEntity() {
+    fun checkCreatable(teamId: Long) {
+        if (this.service.team.id != teamId) {
+            throw CannotCreateGuideException
+        }
+    }
+}
