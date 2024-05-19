@@ -25,12 +25,10 @@ class Guide(
     @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private var title: String,
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)", name = "guide_path")
     private var path: String,
 ) : BaseEntity() {
     fun checkCreatable(teamId: Long) {
-        if (this.service.team.id != teamId) {
-            throw CannotCreateGuideException
-        }
+        if (this.service.team.id != teamId) throw CannotCreateGuideException
     }
 }
