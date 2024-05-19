@@ -20,7 +20,7 @@ class GuideElement(
     @JoinColumn(name = "guide_id", nullable = false)
     val guide: Guide,
 
-    @Column(nullable = false, unique = true, columnDefinition = "TINYINT UNSIGNED")
+    @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
     private var sequence: Int,
 
     @Column(nullable = false, columnDefinition = "VARCHAR(191)")
