@@ -7,6 +7,7 @@ plugins {
 	kotlin("jvm")
 	kotlin("plugin.spring")
 	kotlin("plugin.jpa")
+    kotlin("kapt")
 }
 
 val projectGroup: String by project
@@ -38,6 +39,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("com.querydsl:querydsl-jpa:${property("querydslVersion")}:jakarta")
+    kapt("com.querydsl:querydsl-apt:${property("querydslVersion")}:jakarta")
+    kapt("jakarta.annotation:jakarta.annotation-api")
+    kapt("jakarta.persistence:jakarta.persistence-api")
 
     // mail
 	implementation("org.springframework.boot:spring-boot-starter-mail")
