@@ -1,6 +1,6 @@
 package com.onboard.server.domain.guide.domain
 
-import com.onboard.server.domain.guide.exception.CannotCreateGuideException
+import com.onboard.server.domain.guide.exception.CannotCommandGuideException
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.team.domain.Team
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -36,7 +36,7 @@ class GuideTest : DescribeSpec({
         context("자신의 서비스가 맞다면") {
             it("가이드를 생성할 수 있다") {
                 shouldNotThrowAny {
-                    guide.checkCreatable(teamId)
+                    guide.checkMine(teamId)
                 }
             }
         }
@@ -45,8 +45,8 @@ class GuideTest : DescribeSpec({
             val wrongTeamId = 2L
 
             it("가이드를 생성할 수 없다") {
-                shouldThrow<CannotCreateGuideException> {
-                    guide.checkCreatable(wrongTeamId)
+                shouldThrow<CannotCommandGuideException> {
+                    guide.checkMine(wrongTeamId)
                 }
             }
         }

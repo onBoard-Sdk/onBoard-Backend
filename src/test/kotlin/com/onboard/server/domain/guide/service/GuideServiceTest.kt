@@ -2,10 +2,13 @@ package com.onboard.server.domain.guide.service
 
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.GuideElementRequest
+import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
+import com.onboard.server.domain.guide.domain.Guide
 import com.onboard.server.domain.guide.domain.GuideElementRepository
 import com.onboard.server.domain.guide.domain.GuideRepository
-import com.onboard.server.domain.guide.exception.CannotCreateGuideException
+import com.onboard.server.domain.guide.exception.CannotCommandGuideException
 import com.onboard.server.domain.guide.exception.CannotDuplicateSequenceException
+import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
@@ -17,8 +20,10 @@ import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
 class GuideServiceTest : DescribeSpec() {
@@ -191,7 +196,7 @@ class GuideServiceTest : DescribeSpec() {
                 )
 
                 it("가이드를 생성할 수 없다") {
-                    shouldThrow<CannotCreateGuideException> {
+                    shouldThrow<CannotCommandGuideException> {
                         guideService.create(temporarySubject, request)
                     }
                 }
@@ -249,6 +254,133 @@ class GuideServiceTest : DescribeSpec() {
                 it("가이드를 생성할 수 없다") {
                     shouldThrow<CannotDuplicateSequenceException> {
                         guideService.create(subject, request)
+                    }
+                }
+            }
+        }
+
+        this.describe("modify") {
+            context("가이드 정보를 받으면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val savedService = serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = "name",
+                        logoImageUrl = "logoImageUrl",
+                        serviceUrl = "serviceUrl",
+                    )
+                )
+
+                val savedGuide = guideRepository.save(
+                    Guide(
+                        service = savedService,
+                        title = "title",
+                        path = "path"
+                    )
+                )
+
+                val request = UpdateGuideRequest(
+                    guideTitle = "홈 화면이 업데이트되었습니다.",
+                    path = "/home",
+                )
+
+                val subject = Subject(savedTeam.id)
+
+                it("가이드를 수정한다") {
+                    guideService.modify(subject, savedGuide.id, request)
+
+                    guideRepository.findByIdOrNull(savedGuide.id)?.let {
+                        it.getTitle shouldBe "홈 화면이 업데이트되었습니다."
+                        it.getPath shouldBe "/home"
+                    }
+
+                }
+            }
+
+            context("수정할 가이드를 찾지 못하면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val savedService = serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = "name",
+                        logoImageUrl = "logoImageUrl",
+                        serviceUrl = "serviceUrl",
+                    )
+                )
+
+                guideRepository.save(
+                    Guide(
+                        service = savedService,
+                        title = "title",
+                        path = "path"
+                    )
+                )
+
+                val request = UpdateGuideRequest(
+                    guideTitle = "홈 화면이 업데이트되었습니다.",
+                    path = "/home",
+                )
+
+                val subject = Subject(savedTeam.id)
+
+                it("가이드를 수정할 수 없다") {
+                    shouldThrow<GuideNotFoundException> {
+                        guideService.modify(subject, 0, request)
+                    }
+                }
+            }
+
+            context("자신이 만든 가이드가 아니면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val savedService = serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = "name",
+                        logoImageUrl = "logoImageUrl",
+                        serviceUrl = "serviceUrl",
+                    )
+                )
+
+                val savedGuide = guideRepository.save(
+                    Guide(
+                        service = savedService,
+                        title = "title",
+                        path = "path"
+                    )
+                )
+
+                val request = UpdateGuideRequest(
+                    guideTitle = "홈 화면이 업데이트되었습니다.",
+                    path = "/home",
+                )
+
+                it("가이드를 수정할 수 없다") {
+                    shouldThrow<CannotCommandGuideException> {
+                        guideService.modify(temporarySubject, savedGuide.id, request)
                     }
                 }
             }
