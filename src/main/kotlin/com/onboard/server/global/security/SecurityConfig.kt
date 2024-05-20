@@ -56,6 +56,7 @@ class SecurityConfig(
 
                     // guide
                     .requestMatchers(POST, "api/v1/guides").authenticated()
+                    .requestMatchers(PATCH, "api/v1/guides/{guideId}").authenticated()
 
                     .anyRequest().denyAll()
             }
