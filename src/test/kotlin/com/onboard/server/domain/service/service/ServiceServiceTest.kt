@@ -5,6 +5,7 @@ import com.onboard.server.domain.service.controller.dto.ModifyServiceRequest
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
+import com.onboard.server.domain.service.exception.ServiceUrlAlreadyExistsException
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.Team
 import com.onboard.server.domain.team.domain.TeamRepository
@@ -70,6 +71,34 @@ class ServiceServiceTest : DescribeSpec() {
                 it("서비스 생성에 실패한다") {
                     shouldThrow<TeamNotFoundException> {
                         serviceService.create(temporarySubject, request)
+                    }
+                }
+            }
+
+            context("이미 존재하는 서비스 URL이면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = request.name,
+                        logoImageUrl = request.logoImageUrl,
+                        serviceUrl = request.serviceUrl,
+                    )
+                )
+
+                val subject = Subject(savedTeam.id)
+
+                it("서비스를 생성할 수 없다") {
+                    shouldThrow<ServiceUrlAlreadyExistsException> {
+                        serviceService.create(subject, request)
                     }
                 }
             }

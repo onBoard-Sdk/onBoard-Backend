@@ -9,6 +9,7 @@ import com.onboard.server.domain.service.controller.dto.ServiceElement
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
+import com.onboard.server.domain.service.exception.ServiceUrlAlreadyExistsException
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.TeamRepository
 import com.onboard.server.domain.team.exception.TeamNotFoundException
@@ -25,6 +26,9 @@ class ServiceService(
     fun create(subject: Subject, request: CreateServiceRequest): CreateServiceResponse {
         val currentTeam = teamRepository.findByIdOrNull(subject.id)
             ?: throw TeamNotFoundException
+
+        if (serviceRepository.existsByServiceUrl(request.serviceUrl))
+            throw ServiceUrlAlreadyExistsException
 
         val savedService = serviceRepository.save(
             Service(

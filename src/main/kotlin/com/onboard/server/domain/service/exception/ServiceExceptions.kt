@@ -9,3 +9,7 @@ object ServiceCannotModifyException : BusinessException(403, "본인의 서비�
 object ServiceNotFoundException : BusinessException(404, "서비스를 찾지 못했습니다.") {
     private fun readResolve(): Any = ServiceNotFoundException
 }
+
+object ServiceUrlAlreadyExistsException : BusinessException(409, "이미 존재하는 서비스 URL입니다.") {
+    private fun readResolve(): Any = ServiceUrlAlreadyExistsException
+}
