@@ -2,10 +2,14 @@ package com.onboard.server.domain.guide.service
 
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideResponse
+import com.onboard.server.domain.guide.controller.dto.UpdateGuideElementRequest
+import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
+import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
 import com.onboard.server.domain.guide.domain.Guide
 import com.onboard.server.domain.guide.domain.GuideElement
 import com.onboard.server.domain.guide.domain.GuideElementRepository
 import com.onboard.server.domain.guide.domain.GuideRepository
+import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.team.domain.Subject
@@ -29,7 +33,7 @@ class GuideService(
             service = service,
             title = request.guideTitle,
             path = request.path,
-        ).apply { checkCreatable(subject.id) }
+        ).apply { checkMine(subject.id) }
 
         request.guideElements
             .map { it.sequence }
@@ -55,5 +59,16 @@ class GuideService(
         guideElementRepository.saveAll(guideElements)
 
         return CreateGuideResponse(savedGuide.id)
+    }
+
+    @Transactional
+    fun modify(subject: Subject, guideId: Long, request: UpdateGuideRequest): UpdateGuideResponse {
+        val guide = guideRepository.findByIdOrNull(guideId)
+            ?.apply { checkMine(subject.id) }
+            ?: throw GuideNotFoundException
+
+        guide.update(request.guideTitle, request.path)
+
+        return UpdateGuideResponse(guide.id)
     }
 }
