@@ -23,14 +23,16 @@ class GuideElement(
     @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
     private var sequence: Int,
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(191)")
-    private var summary: String,
+    @Column(columnDefinition = "VARCHAR(191)")
+    private var summary: String?,
 
     @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private var title: String,
 
     @Column(nullable = false)
     private var description: String,
+
+    private var guideElementImageUrl: String?,
 
     @Column(nullable = false)
     private var shape: String,

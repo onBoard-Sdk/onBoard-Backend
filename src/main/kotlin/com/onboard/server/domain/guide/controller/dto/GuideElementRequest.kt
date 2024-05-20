@@ -10,9 +10,8 @@ data class GuideElementRequest(
     @field:NotNull
     val sequence: Int,
 
-    @field:Size(max = 50)
-    @field:NotBlank
-    val emoji: String,
+    @field:Size(max = 191)
+    val emoji: String?,
 
     @field:Size(max = 50)
     @field:NotBlank
@@ -21,6 +20,9 @@ data class GuideElementRequest(
     @field:Size(max = 255)
     @field:NotBlank
     val description: String,
+
+    @field:Size(max = 255)
+    val imageUrl: String?,
 
     @field:Size(max = 255)
     @field:NotBlank
