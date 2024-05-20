@@ -1,8 +1,9 @@
 package com.onboard.server.domain.service.domain
 
+import com.onboard.server.domain.service.createService
 import com.onboard.server.domain.service.exception.ServiceCannotModifyException
+import com.onboard.server.domain.team.createTeam
 import com.onboard.server.domain.team.domain.Subject
-import com.onboard.server.domain.team.domain.Team
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
@@ -68,18 +69,4 @@ class ServiceTest : DescribeSpec({
             }
         }
     }
-}) {
-    companion object {
-        fun createTeam() = Team(
-            email = "email",
-            password = "password",
-        )
-
-        fun createService(team: Team) = Service(
-            team = team,
-            name = "onBoard",
-            logoImageUrl = "logoImageUrl",
-            serviceUrl = "serviceUrl",
-        )
-    }
-}
+})

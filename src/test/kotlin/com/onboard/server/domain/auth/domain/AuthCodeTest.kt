@@ -1,5 +1,6 @@
 package com.onboard.server.domain.auth.domain
 
+import com.onboard.server.domain.auth.createAuthCode
 import com.onboard.server.domain.auth.domain.AuthCode.Companion.CODE_LENGTH
 import com.onboard.server.domain.auth.domain.AuthCode.Companion.MAX_REQUEST_LIMIT
 import com.onboard.server.domain.auth.exception.AuthCodeAlreadyCertifyException
@@ -15,10 +16,7 @@ class AuthCodeTest : DescribeSpec({
         val correctEmail = "alsdl0629@dsm.hs.kr"
 
         context("전달된 정보가 모두 일치하면") {
-            val authCode = AuthCode(
-                code = "123456",
-                email = correctEmail
-            )
+            val authCode = createAuthCode(email = correctEmail)
 
             it("인증에 성공한다") {
                 shouldNotThrowAny {
@@ -28,10 +26,7 @@ class AuthCodeTest : DescribeSpec({
         }
 
         context("매개변수의 email과 일치하지 않으면") {
-            val authCode = AuthCode(
-                code = "123456",
-                email = correctEmail
-            )
+            val authCode = createAuthCode(email = correctEmail)
             val wrongEmail = "alsdl0629@gmail.com"
 
             it("인증에 실패한다") {
@@ -42,11 +37,7 @@ class AuthCodeTest : DescribeSpec({
         }
 
         context("이미 인증된 코드이면") {
-            val alreadyCertifyAuthCode = AuthCode(
-                code = "123456",
-                email = correctEmail,
-                isVerified = true
-            )
+            val alreadyCertifyAuthCode = createAuthCode(email = correctEmail, isVerified = true)
 
             it("예외가 발생한다") {
                 shouldThrow<AuthCodeAlreadyCertifyException> {

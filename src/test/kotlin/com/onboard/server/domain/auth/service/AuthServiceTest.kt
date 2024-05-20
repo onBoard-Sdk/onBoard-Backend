@@ -1,6 +1,7 @@
 package com.onboard.server.domain.auth.service
 
 import com.ninjasquad.springmockk.MockkBean
+import com.onboard.server.domain.auth.createAuthCode
 import com.onboard.server.domain.auth.domain.AuthCode
 import com.onboard.server.domain.auth.domain.AuthCodeRepository
 import com.onboard.server.domain.auth.domain.RefreshToken
@@ -9,7 +10,7 @@ import com.onboard.server.domain.auth.exception.AuthCodeNotFoundException
 import com.onboard.server.domain.auth.exception.AuthCodeOverLimitException
 import com.onboard.server.domain.auth.exception.RefreshTokenNotFoundException
 import com.onboard.server.domain.auth.exception.WrongAuthInfoException
-import com.onboard.server.domain.team.domain.Team
+import com.onboard.server.domain.team.createTeam
 import com.onboard.server.domain.team.domain.TeamRepository
 import com.onboard.server.domain.team.exception.TeamAlreadyExistsException
 import com.onboard.server.thirdparty.email.EmailService
@@ -71,12 +72,7 @@ class AuthServiceTest : DescribeSpec() {
 
             context("사용자의 이메일이 이미 존재하는 이메일이면") {
                 teamRepository.save(
-                    Team(
-                        email = email,
-                        password = "password",
-                        name = "name",
-                        logoImageUrl = "logoImageUrl",
-                    )
+                    createTeam(email = email)
                 )
 
                 it("예외가 발생한다") {
@@ -90,7 +86,7 @@ class AuthServiceTest : DescribeSpec() {
                 val authCodes = mutableListOf<AuthCode>()
                 (1..AuthCode.MAX_REQUEST_LIMIT).forEach {
                     authCodes.add(
-                        AuthCode(
+                        createAuthCode(
                             code = AuthCode.generateRandomCode(),
                             email = email
                         )
@@ -109,7 +105,7 @@ class AuthServiceTest : DescribeSpec() {
         this.describe("certifyAuthCode") {
             context("전달된 정보가 모두 일치하면") {
                 val authCode = authCodeRepository.save(
-                    AuthCode(
+                    createAuthCode(
                         code = AuthCode.generateRandomCode(),
                         email = email
                     )
@@ -134,20 +130,18 @@ class AuthServiceTest : DescribeSpec() {
         }
 
         this.describe("signIn") {
-            val password = "password"
+            val correctPassword = "password"
 
             context("이메일, 비밀번호가 일치하면") {
                 teamRepository.save(
-                    Team(
+                    createTeam(
                         email = email,
-                        password = passwordEncoder.encode(password),
-                        name = "name",
-                        logoImageUrl = "logoImageUrl",
+                        password = passwordEncoder.encode(correctPassword),
                     )
                 )
 
                 it("로그인을 성공해 토큰을 반환한다") {
-                    authService.signIn(email, password).apply {
+                    authService.signIn(email, correctPassword).apply {
                         accessToken shouldNotBe null
                         accessTokenExpirationTime shouldBeAfter LocalDateTime.now()
                         refreshToken shouldNotBe null
@@ -161,12 +155,19 @@ class AuthServiceTest : DescribeSpec() {
 
                 it("로그인에 실패한다") {
                     shouldThrow<WrongAuthInfoException> {
-                        authService.signIn(wrongEmail, password)
+                        authService.signIn(wrongEmail, correctPassword)
                     }
                 }
             }
 
             context("비밀번호가 일치하지 않으면") {
+                teamRepository.save(
+                    createTeam(
+                        email = email,
+                        password = passwordEncoder.encode(correctPassword),
+                    )
+                )
+
                 val wrongPassword = "wrongPassword"
 
                 it("로그인에 실패한다") {
