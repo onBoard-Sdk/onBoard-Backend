@@ -4,8 +4,8 @@ import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.GuideElementRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.domain.Guide
-import com.onboard.server.domain.guide.domain.GuideElementRepository
-import com.onboard.server.domain.guide.domain.GuideRepository
+import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
+import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.guide.exception.CannotCommandGuideException
 import com.onboard.server.domain.guide.exception.CannotDuplicateSequenceException
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
@@ -39,16 +39,16 @@ class GuideServiceTest : DescribeSpec() {
     private lateinit var serviceRepository: ServiceRepository
 
     @Autowired
-    private lateinit var guideRepository: GuideRepository
+    private lateinit var guideRepository: GuideJpaRepository
 
     @Autowired
-    private lateinit var guideElementRepository: GuideElementRepository
+    private lateinit var guideElementJpaRepository: GuideElementJpaRepository
 
     val temporarySubject = Subject(-1)
 
     init {
         this.afterTest {
-            guideElementRepository.deleteAllInBatch()
+            guideElementJpaRepository.deleteAllInBatch()
             guideRepository.deleteAllInBatch()
             serviceRepository.deleteAllInBatch()
             teamRepository.deleteAllInBatch()

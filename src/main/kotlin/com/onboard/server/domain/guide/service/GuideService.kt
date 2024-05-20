@@ -2,13 +2,12 @@ package com.onboard.server.domain.guide.service
 
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideResponse
-import com.onboard.server.domain.guide.controller.dto.UpdateGuideElementRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
 import com.onboard.server.domain.guide.domain.Guide
 import com.onboard.server.domain.guide.domain.GuideElement
-import com.onboard.server.domain.guide.domain.GuideElementRepository
-import com.onboard.server.domain.guide.domain.GuideRepository
+import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
+import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
@@ -20,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 @Service
 class GuideService(
-    private val guideRepository: GuideRepository,
-    private val guideElementRepository: GuideElementRepository,
+    private val guideRepository: GuideJpaRepository,
+    private val guideElementJpaRepository: GuideElementJpaRepository,
     private val serviceRepository: ServiceRepository,
 ) {
     @Transactional
@@ -56,7 +55,7 @@ class GuideService(
                 )
             }
 
-        guideElementRepository.saveAll(guideElements)
+        guideElementJpaRepository.saveAll(guideElements)
 
         return CreateGuideResponse(savedGuide.id)
     }
@@ -70,5 +69,9 @@ class GuideService(
         guide.update(request.guideTitle, request.path)
 
         return UpdateGuideResponse(guide.id)
+    }
+
+    fun getAll(subject: Subject) {
+
     }
 }
