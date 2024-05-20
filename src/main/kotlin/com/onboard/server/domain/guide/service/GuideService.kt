@@ -31,6 +31,10 @@ class GuideService(
             path = request.path,
         ).apply { checkCreatable(subject.id) }
 
+        request.guideElements
+            .map { it.sequence }
+            .apply { GuideElement.checkSequenceUnique(this) }
+
         val savedGuide = guideRepository.save(guide)
 
         val guideElements = request.guideElements
@@ -41,6 +45,7 @@ class GuideService(
                     summary = it.emoji,
                     title = it.guideElementTitle,
                     description = it.description,
+                    guideElementImageUrl = it.imageUrl,
                     shape = it.shape,
                     width = it.width,
                     length = it.length

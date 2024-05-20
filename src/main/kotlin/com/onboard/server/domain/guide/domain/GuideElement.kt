@@ -1,5 +1,6 @@
 package com.onboard.server.domain.guide.domain
 
+import com.onboard.server.domain.guide.exception.CannotDuplicateSequenceException
 import com.onboard.server.global.entity.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -42,4 +43,11 @@ class GuideElement(
 
     @Column(nullable = false, columnDefinition = "MEDIUMINT")
     private var length: Int,
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun checkSequenceUnique(sequences: List<Int>) {
+            if (sequences.size != sequences.distinct().size)
+                throw CannotDuplicateSequenceException
+        }
+    }
+}
