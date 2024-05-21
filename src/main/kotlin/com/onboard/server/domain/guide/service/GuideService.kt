@@ -2,6 +2,7 @@ package com.onboard.server.domain.guide.service
 
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideResponse
+import com.onboard.server.domain.guide.controller.dto.GetAllGuidesResponse
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
 import com.onboard.server.domain.guide.domain.Guide
@@ -9,6 +10,8 @@ import com.onboard.server.domain.guide.domain.GuideElement
 import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
 import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
+import com.onboard.server.domain.guide.repository.GuideRepository
+import com.onboard.server.domain.guide.repository.vo.GuideVO
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.team.domain.Subject
@@ -19,9 +22,10 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 @Service
 class GuideService(
-    private val guideRepository: GuideJpaRepository,
+    private val guideJpaRepository: GuideJpaRepository,
     private val guideElementJpaRepository: GuideElementJpaRepository,
     private val serviceRepository: ServiceRepository,
+    private val guideRepository: GuideRepository,
 ) {
     @Transactional
     fun create(subject: Subject, request: CreateGuideRequest): CreateGuideResponse {
@@ -38,7 +42,7 @@ class GuideService(
             .map { it.sequence }
             .apply { GuideElement.checkSequenceUnique(this) }
 
-        val savedGuide = guideRepository.save(guide)
+        val savedGuide = guideJpaRepository.save(guide)
 
         val guideElements = request.guideElements
             .map {
@@ -62,7 +66,7 @@ class GuideService(
 
     @Transactional
     fun modify(subject: Subject, guideId: Long, request: UpdateGuideRequest): UpdateGuideResponse {
-        val guide = guideRepository.findByIdOrNull(guideId)
+        val guide = guideJpaRepository.findByIdOrNull(guideId)
             ?.apply { checkMine(subject.id) }
             ?: throw GuideNotFoundException
 
@@ -71,7 +75,8 @@ class GuideService(
         return UpdateGuideResponse(guide.id)
     }
 
-    fun getAll(subject: Subject) {
-
+    fun getAll(subject: Subject): GetAllGuidesResponse {
+        val guideVOs = guideRepository.getAllByTeamId(subject.id)
+        return GetAllGuidesResponse(guideVOs)
     }
 }
