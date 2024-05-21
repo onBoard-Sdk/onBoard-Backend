@@ -2,12 +2,14 @@ package com.onboard.server.domain.guide.controller
 
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideResponse
+import com.onboard.server.domain.guide.controller.dto.GetAllGuidesResponse
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
 import com.onboard.server.domain.guide.service.GuideService
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.global.common.ApiResponse
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,4 +34,8 @@ class GuideController(
         @PathVariable guideId: Long,
         @RequestBody request: UpdateGuideRequest,
     ): ApiResponse<UpdateGuideResponse> = ApiResponse.ok(guideService.modify(subject, guideId, request))
+
+    @GetMapping
+    fun getAll(subject: Subject): ApiResponse<GetAllGuidesResponse> =
+        ApiResponse.ok(guideService.getAll(subject))
 }
