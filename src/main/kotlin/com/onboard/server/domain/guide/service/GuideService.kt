@@ -11,7 +11,6 @@ import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
 import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.guide.repository.GuideRepository
-import com.onboard.server.domain.guide.repository.vo.GuideVO
 import com.onboard.server.domain.service.domain.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.team.domain.Subject
