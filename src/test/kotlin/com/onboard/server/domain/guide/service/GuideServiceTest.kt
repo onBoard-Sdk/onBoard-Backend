@@ -385,5 +385,58 @@ class GuideServiceTest : DescribeSpec() {
                 }
             }
         }
+
+        this.describe("getAll") {
+            context("팀 아이디를 받으면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val savedService = serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = "name",
+                        logoImageUrl = "logoImageUrl",
+                        serviceUrl = "serviceUrl",
+                    )
+                )
+
+                guideRepository.saveAll(
+                    listOf(
+                        Guide(
+                            service = savedService,
+                            title = "title1",
+                            path = "path1",
+                        ),
+                        Guide(
+                            service = savedService,
+                            title = "title2",
+                            path = "path2",
+                        ),
+                    )
+                )
+
+                val subject = Subject(savedTeam.id)
+
+                it("가이드 목록을 반환한다") {
+                    val response = guideService.getAll(subject)
+
+                    response.guides[0].apply {
+                        guideTitle shouldBe "title1"
+                        path shouldBe "path1"
+                    }
+
+                    response.guides[1].apply {
+                        guideTitle shouldBe "title2"
+                        path shouldBe "path2"
+                    }
+                }
+            }
+        }
     }
 }
