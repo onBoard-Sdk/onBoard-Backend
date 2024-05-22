@@ -1,4 +1,4 @@
-package com.onboard.server.global
+package com.onboard.server.global.config.redis
 
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
