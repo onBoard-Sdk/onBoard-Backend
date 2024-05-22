@@ -3,6 +3,7 @@ package com.onboard.server.domain.guide.controller
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideResponse
 import com.onboard.server.domain.guide.controller.dto.GetAllGuidesResponse
+import com.onboard.server.domain.guide.controller.dto.GetAllGuidesWithElementsResponse
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
 import com.onboard.server.domain.guide.service.GuideService
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/guides")
 @RestController
 class GuideController(
-    private val guideService: GuideService
+    private val guideService: GuideService,
 ) {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -38,4 +39,8 @@ class GuideController(
     @GetMapping
     fun getAll(subject: Subject): ApiResponse<GetAllGuidesResponse> =
         ApiResponse.ok(guideService.getAll(subject))
+
+    @GetMapping("/{guideId}/flows")
+    fun getAllWithElements(subject: Subject, @PathVariable guideId: Long): ApiResponse<GetAllGuidesWithElementsResponse> =
+        ApiResponse.ok(guideService.getAllGuideElements(subject, guideId))
 }
