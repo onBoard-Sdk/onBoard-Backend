@@ -4,17 +4,18 @@ import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.GuideElementRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.domain.Guide
+import com.onboard.server.domain.guide.domain.GuideElement
 import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
 import com.onboard.server.domain.guide.domain.GuideJpaRepository
-import com.onboard.server.domain.guide.exception.CannotCommandGuideException
+import com.onboard.server.domain.guide.exception.CannotAccessGuideException
 import com.onboard.server.domain.guide.exception.CannotDuplicateSequenceException
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.service.domain.Service
-import com.onboard.server.domain.service.domain.ServiceRepository
+import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.Team
-import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.repository.TeamRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.DescribeSpec
@@ -196,7 +197,7 @@ class GuideServiceTest : DescribeSpec() {
                 )
 
                 it("가이드를 생성할 수 없다") {
-                    shouldThrow<CannotCommandGuideException> {
+                    shouldThrow<CannotAccessGuideException> {
                         guideService.create(temporarySubject, request)
                     }
                 }
@@ -379,7 +380,7 @@ class GuideServiceTest : DescribeSpec() {
                 )
 
                 it("가이드를 수정할 수 없다") {
-                    shouldThrow<CannotCommandGuideException> {
+                    shouldThrow<CannotAccessGuideException> {
                         guideService.modify(temporarySubject, savedGuide.id, request)
                     }
                 }
@@ -434,6 +435,84 @@ class GuideServiceTest : DescribeSpec() {
                     response.guides[1].apply {
                         guideTitle shouldBe "title2"
                         path shouldBe "path2"
+                    }
+                }
+            }
+        }
+
+        this.describe("getAllGuideElements") {
+            context("가이드 아이디를 받으면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val savedService = serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = "name",
+                        logoImageUrl = "logoImageUrl",
+                        serviceUrl = "serviceUrl",
+                    )
+                )
+
+                val savedGuide = guideRepository.save(
+                    Guide(
+                        service = savedService,
+                        title = "title1",
+                        path = "path1",
+                    )
+                )
+
+                guideElementJpaRepository.saveAll(
+                    listOf(
+                        GuideElement(
+                            guide = savedGuide,
+                            sequence = 1,
+                            summary = "이모지1",
+                            title = "이건 버튼입니다.1",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.1",
+                            guideElementImageUrl = "imageUrl1",
+                            shape = "가이드 박스 모양1",
+                            width = 100,
+                            length = 100
+                        ),
+                        GuideElement(
+                            guide = savedGuide,
+                            sequence = 2,
+                            summary = "이모지2",
+                            title = "이건 버튼입니다.2",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.2",
+                            guideElementImageUrl = "imageUrl2",
+                            shape = "가이드 박스 모양2",
+                            width = 200,
+                            length = 200
+                        )
+                    )
+                )
+
+                val subject = Subject(savedTeam.id)
+
+                it("가이드 및 가이드 요소 정보를 반환한다") {
+                    val response = guideService.getAllGuideElements(subject, savedGuide.id)
+
+                    response.guide.apply {
+                        guideTitle shouldBe "title1"
+                        path shouldBe "path1"
+                    }
+
+                    response.guideElements[0].apply {
+                        sequence shouldBe 1
+                        guideElementTitle shouldBe "이건 버튼입니다.1"
+                    }
+
+                    response.guideElements[1].apply {
+                        sequence shouldBe 2
+                        guideElementTitle shouldBe "이건 버튼입니다.2"
                     }
                 }
             }
