@@ -1,11 +1,11 @@
 package com.onboard.server.domain.team.service
 
-import com.onboard.server.domain.auth.domain.AuthCodeRepository
+import com.onboard.server.domain.auth.repository.AuthCodeRepository
 import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.exception.NeverCertifyException
 import com.onboard.server.domain.team.controller.dto.SignUpRequest
 import com.onboard.server.domain.team.domain.Team
-import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.repository.TeamRepository
 import com.onboard.server.domain.team.exception.TeamAlreadyExistsException
 import com.onboard.server.global.security.jwt.JwtProvider
 import org.springframework.security.crypto.password.PasswordEncoder

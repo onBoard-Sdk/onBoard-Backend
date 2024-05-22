@@ -1,14 +1,14 @@
 package com.onboard.server.domain.auth.service
 
 import com.onboard.server.domain.auth.domain.AuthCode
-import com.onboard.server.domain.auth.domain.AuthCodeRepository
+import com.onboard.server.domain.auth.repository.AuthCodeRepository
 import com.onboard.server.domain.auth.domain.RefreshToken
-import com.onboard.server.domain.auth.domain.RefreshTokenRepository
+import com.onboard.server.domain.auth.repository.RefreshTokenRepository
 import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.exception.AuthCodeNotFoundException
 import com.onboard.server.domain.auth.exception.RefreshTokenNotFoundException
 import com.onboard.server.domain.auth.exception.WrongAuthInfoException
-import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.repository.TeamRepository
 import com.onboard.server.domain.team.exception.TeamAlreadyExistsException
 import com.onboard.server.global.security.jwt.JwtProvider
 import com.onboard.server.thirdparty.email.EmailService

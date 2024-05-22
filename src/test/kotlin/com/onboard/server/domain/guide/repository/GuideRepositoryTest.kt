@@ -3,9 +3,9 @@ package com.onboard.server.domain.guide.repository
 import com.onboard.server.domain.guide.domain.Guide
 import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.service.createService
-import com.onboard.server.domain.service.domain.ServiceRepository
+import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.team.createTeam
-import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.repository.TeamRepository
 import com.onboard.server.global.annotation.RepositoryTest
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension

@@ -3,12 +3,12 @@ package com.onboard.server.domain.service.service
 import com.onboard.server.domain.service.controller.dto.CreateServiceRequest
 import com.onboard.server.domain.service.controller.dto.ModifyServiceRequest
 import com.onboard.server.domain.service.createService
-import com.onboard.server.domain.service.domain.ServiceRepository
+import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.service.exception.ServiceUrlAlreadyExistsException
 import com.onboard.server.domain.team.createTeam
 import com.onboard.server.domain.team.domain.Subject
-import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.repository.TeamRepository
 import com.onboard.server.domain.team.exception.TeamNotFoundException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.extensions.Extension

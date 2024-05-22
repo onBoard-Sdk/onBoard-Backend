@@ -1,6 +1,6 @@
 package com.onboard.server.global.security.auth
 
-import com.onboard.server.domain.team.domain.TeamRepository
+import com.onboard.server.domain.team.repository.TeamRepository
 import com.onboard.server.domain.team.exception.TeamNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.userdetails.UserDetails
