@@ -1,6 +1,6 @@
 package com.onboard.server.domain.guide.domain
 
-import com.onboard.server.domain.guide.exception.CannotCommandGuideException
+import com.onboard.server.domain.guide.exception.CannotAccessGuideException
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.global.entity.BaseEntity
 import jakarta.persistence.Column
@@ -28,18 +28,18 @@ class Guide(
     @Column(nullable = false, columnDefinition = "VARCHAR(50)", name = "guide_path")
     private var path: String,
 ) : BaseEntity() {
-    val getTitle
-        get() = title
-
-    val getPath
-        get() = path
-
     fun checkMine(teamId: Long) {
-        if (this.service.team.id != teamId) throw CannotCommandGuideException
+        if (this.service.team.id != teamId) throw CannotAccessGuideException
     }
 
     fun update(title: String, path: String) {
         this.title = title
         this.path = path
     }
+
+    val getTitle
+        get() = title
+
+    val getPath
+        get() = path
 }

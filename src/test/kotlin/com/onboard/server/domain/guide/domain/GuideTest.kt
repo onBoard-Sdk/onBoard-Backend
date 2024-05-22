@@ -1,6 +1,6 @@
 package com.onboard.server.domain.guide.domain
 
-import com.onboard.server.domain.guide.exception.CannotCommandGuideException
+import com.onboard.server.domain.guide.exception.CannotAccessGuideException
 import com.onboard.server.domain.service.domain.Service
 import com.onboard.server.domain.team.domain.Team
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -45,7 +45,7 @@ class GuideTest : DescribeSpec({
             val wrongTeamId = 2L
 
             it("가이드를 생성할 수 없다") {
-                shouldThrow<CannotCommandGuideException> {
+                shouldThrow<CannotAccessGuideException> {
                     guide.checkMine(wrongTeamId)
                 }
             }
