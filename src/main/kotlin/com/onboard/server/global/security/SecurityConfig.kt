@@ -59,6 +59,7 @@ class SecurityConfig(
                     .requestMatchers(PATCH, "api/v1/guides/{guideId}").authenticated()
                     .requestMatchers(GET, "api/v1/guides").authenticated()
                     .requestMatchers(GET, "api/v1/guides/{guideId}/flows").permitAll()
+                    .requestMatchers(GET, "api/v1/guides/pages").permitAll()
 
                     .anyRequest().denyAll()
             }
