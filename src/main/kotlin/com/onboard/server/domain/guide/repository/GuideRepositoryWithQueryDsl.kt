@@ -67,6 +67,6 @@ class GuideRepositoryWithQueryDsl(
                             )
                         )
                     )
-            )[guideId]!!
+            )[guideId]
     }
 }
