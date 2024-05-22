@@ -387,7 +387,7 @@ class GuideServiceTest : DescribeSpec() {
             }
         }
 
-        this.describe("getAll") {
+        this.describe("getAllByTeamId") {
             context("팀 아이디를 받으면") {
                 val savedTeam = teamRepository.save(
                     Team(
@@ -513,6 +513,58 @@ class GuideServiceTest : DescribeSpec() {
                     response.guideElements[1].apply {
                         sequence shouldBe 2
                         guideElementTitle shouldBe "이건 버튼입니다.2"
+                    }
+                }
+            }
+        }
+
+        this.describe("getAllByPath") {
+            context("url 경로를 받으면") {
+                val savedTeam = teamRepository.save(
+                    Team(
+                        email = "email",
+                        password = "password",
+                        name = "name",
+                        logoImageUrl = "logoImageUrl"
+                    )
+                )
+
+                val savedService = serviceRepository.save(
+                    Service(
+                        team = savedTeam,
+                        name = "name",
+                        logoImageUrl = "logoImageUrl",
+                        serviceUrl = "serviceUrl",
+                    )
+                )
+
+                val path = "/home"
+                guideRepository.saveAll(
+                    listOf(
+                        Guide(
+                            service = savedService,
+                            title = "title1",
+                            path = path,
+                        ),
+                        Guide(
+                            service = savedService,
+                            title = "title2",
+                            path = path,
+                        ),
+                    )
+                )
+
+                it("url 경로에 포함된 가이드 목록을 불러온다") {
+                    val response = guideService.getAll(path)
+
+                    response.guides[0].apply {
+                        guideTitle shouldBe "title1"
+                        this.path shouldBe path
+                    }
+
+                    response.guides[1].apply {
+                        guideTitle shouldBe "title2"
+                        this.path shouldBe path
                     }
                 }
             }
