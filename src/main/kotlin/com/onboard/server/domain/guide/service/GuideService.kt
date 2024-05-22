@@ -2,6 +2,7 @@ package com.onboard.server.domain.guide.service
 
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideResponse
+import com.onboard.server.domain.guide.controller.dto.GetAllGuidesWithElementsResponse
 import com.onboard.server.domain.guide.controller.dto.GetAllGuidesResponse
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
@@ -11,7 +12,7 @@ import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
 import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.guide.repository.GuideRepository
-import com.onboard.server.domain.service.domain.ServiceRepository
+import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.team.domain.Subject
 import org.springframework.data.repository.findByIdOrNull
@@ -77,5 +78,12 @@ class GuideService(
     fun getAll(subject: Subject): GetAllGuidesResponse {
         val guideVOs = guideRepository.getAllByTeamId(subject.id)
         return GetAllGuidesResponse(guideVOs)
+    }
+
+    fun getAllGuideElements(subject: Subject, guideId: Long): GetAllGuidesWithElementsResponse {
+        val guidesWithElements = guideRepository.getAllWithElementsByGuideId(guideId)
+            ?: throw GuideNotFoundException
+
+        return GetAllGuidesWithElementsResponse.from(guidesWithElements)
     }
 }
