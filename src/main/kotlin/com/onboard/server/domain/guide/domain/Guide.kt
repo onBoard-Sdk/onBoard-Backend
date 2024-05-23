@@ -19,13 +19,13 @@ class Guide(
     val id: Long = 0L,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id", nullable = false)
+    @JoinColumn(nullable = false)
     val service: Service,
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
+    @Column(nullable = false)
     private var title: String,
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(50)", name = "guide_path")
+    @Column(nullable = false)
     private var path: String,
 ) : BaseEntity() {
     fun checkMine(teamId: Long) {

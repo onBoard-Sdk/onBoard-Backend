@@ -18,16 +18,15 @@ class GuideElement(
     val id: Long = 0L,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guide_id", nullable = false)
+    @JoinColumn(nullable = false)
     val guide: Guide,
 
-    @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
+    @Column(nullable = false)
     private var sequence: Int,
 
-    @Column(columnDefinition = "VARCHAR(191)")
     private var summary: String?,
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
+    @Column(nullable = false)
     private var title: String,
 
     @Column(nullable = false)
@@ -38,10 +37,10 @@ class GuideElement(
     @Column(nullable = false)
     private var shape: String,
 
-    @Column(nullable = false, columnDefinition = "MEDIUMINT")
+    @Column(nullable = false)
     private var width: Int,
 
-    @Column(nullable = false, columnDefinition = "MEDIUMINT")
+    @Column(nullable = false)
     private var length: Int,
 ) : BaseEntity() {
     companion object {

@@ -21,10 +21,10 @@ class Service(
     val id: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(nullable = false)
     val team: Team,
 
-    @Column(nullable = false, columnDefinition = "varchar(50)")
+    @Column(nullable = false)
     private var name: String,
 
     @Column(nullable = false)

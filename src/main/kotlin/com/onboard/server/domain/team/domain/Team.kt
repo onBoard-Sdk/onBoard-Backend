@@ -13,13 +13,12 @@ class Team(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    @Column(nullable = false, unique = true, columnDefinition = "varchar(60)")
+    @Column(nullable = false, unique = true)
     val email: String,
 
-    @Column(nullable = false, columnDefinition = "char(60)")
+    @Column(nullable = false)
     val password: String,
 
-    @Column(columnDefinition = "varchar(50)")
     private var name: String? = null,
 
     private var logoImageUrl: String? = null,
