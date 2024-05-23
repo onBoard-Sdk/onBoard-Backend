@@ -78,6 +78,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ${{ secrets.DIRECTORY }}
+            sudo usermod -a -G docker $USER
             docker pull ${{ secrets.DOCKER_REPOSITORY }}
             docker rm -f ${{ secrets.DOCKER_CONTAINER_NAME }}
             docker run -dp ${{ secrets.SPRING_HOST_PORT }}:${{ secrets.SPRING_CONTAINER_PORT }} --name ${{ secrets.DOCKER_CONTAINER_NAME }} --env-file .env ${{ secrets.DOCKER_REPOSITORY }}
