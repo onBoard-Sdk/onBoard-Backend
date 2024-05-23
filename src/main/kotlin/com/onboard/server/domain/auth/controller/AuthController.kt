@@ -5,6 +5,7 @@ import com.onboard.server.domain.auth.controller.dto.SignInRequest
 import com.onboard.server.domain.auth.domain.TokenInfo
 import com.onboard.server.domain.auth.service.AuthService
 import com.onboard.server.global.common.ApiResponse
+import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
@@ -32,8 +33,8 @@ class AuthController(
 
     @GetMapping("/codes")
     fun certifyAuthCode(
-        @RequestParam @NotNull authCode: String,
-        @RequestParam @NotNull email: String,
+        @RequestParam @NotBlank authCode: String,
+        @RequestParam @NotBlank email: String,
     ) {
         authService.certifyAuthCode(authCode, email)
     }
@@ -44,6 +45,6 @@ class AuthController(
         ApiResponse.ok(authService.signIn(request.email, request.password))
 
     @PutMapping("/reissue")
-    fun reissue(@RequestHeader("refresh-token") @NotNull refreshToken: String): ApiResponse<TokenInfo> =
+    fun reissue(@RequestHeader("refresh-token") @NotBlank refreshToken: String): ApiResponse<TokenInfo> =
         ApiResponse.ok(authService.reissue(refreshToken))
 }

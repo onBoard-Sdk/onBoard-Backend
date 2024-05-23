@@ -9,7 +9,9 @@ import com.onboard.server.domain.service.service.ServiceService
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.global.common.ApiResponse
 import jakarta.validation.Valid
+import jakarta.validation.constraints.NotNull
 import org.springframework.http.HttpStatus
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
+@Validated
 @RequestMapping("/api/v1/services")
 @RestController
 class ServiceController(
@@ -36,13 +39,13 @@ class ServiceController(
     @PatchMapping("/{serviceId}")
     fun modify(
         subject: Subject,
-        @PathVariable serviceId: Long,
+        @PathVariable @NotNull serviceId: Long,
         @RequestBody @Valid request: ModifyServiceRequest,
     ): ApiResponse<ModifyServiceResponse> = ApiResponse.noContent(serviceService.modify(subject, serviceId, request))
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{serviceId}")
-    fun remove(subject: Subject, @PathVariable serviceId: Long) {
+    fun remove(subject: Subject, @PathVariable @NotNull serviceId: Long) {
         serviceService.remove(subject, serviceId)
     }
 
