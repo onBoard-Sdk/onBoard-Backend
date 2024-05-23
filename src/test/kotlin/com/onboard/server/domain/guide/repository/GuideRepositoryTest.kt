@@ -34,6 +34,13 @@ class GuideRepositoryTest : DescribeSpec() {
     private lateinit var teamRepository: TeamRepository
 
     init {
+        this.afterTest {
+            guideElementJpaRepository.deleteAllInBatch()
+            guideJpaRepository.deleteAllInBatch()
+            serviceRepository.deleteAllInBatch()
+            teamRepository.deleteAllInBatch()
+        }
+
         this.describe("getAllByTeamId") {
             context("팀 아이디를 받으면") {
                 val savedTeam = teamRepository.save(createTeam())
