@@ -17,6 +17,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
 
   data:
     redis:
@@ -41,9 +42,9 @@ logging.level:
   org.hibernate.SQL: debug
 
 jwt:
-  secret-key: ${SECRET_KEY:qwertyuiopasdfghjkl;zxcvbnm,qwertyuioasdfghjklzxcvbnm,asdfghjkqwertyuio}
-  access-exp: ${ACCESS_EXP:180}
-  refresh_exp: ${REFRESH_EXP:360}
+  secret-key: qwertyuiopasdfghjkl;zxcvbnm,qwertyuioasdfghjklzxcvbnm,asdfghjkqwertyuio
+  access-exp: 100
+  refresh-exp: 100
 
 cloud:
   aws:

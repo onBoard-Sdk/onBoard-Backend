@@ -35,4 +35,4 @@ cloud:
 jwt:
   secret-key: ${SECRET_KEY}
   access-exp: ${ACCESS_EXP}
-  refresh_exp: ${REFRESH_EXP}
+  refresh-exp: ${REFRESH_EXP}
