@@ -10,6 +10,10 @@ data class WriteFeedbackRequest(
 
     @field:Size(max = 50)
     @field:NotBlank
+    val path: String,
+
+    @field:Size(max = 50)
+    @field:NotBlank
     val title: String,
 
     @field:NotBlank
