@@ -25,7 +25,7 @@ class Guide(
     @Column(nullable = false)
     private var title: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "guide_path")
     private var path: String,
 ) : BaseEntity() {
     fun checkMine(teamId: Long) {
