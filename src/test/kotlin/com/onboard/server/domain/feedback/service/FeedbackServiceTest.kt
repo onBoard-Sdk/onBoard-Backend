@@ -2,7 +2,6 @@ package com.onboard.server.domain.feedback.service
 
 import com.onboard.server.domain.feedback.controller.dto.WriteFeedbackRequest
 import com.onboard.server.domain.feedback.createFeedback
-import com.onboard.server.domain.feedback.domain.Feedback
 import com.onboard.server.domain.feedback.repository.FeedbackRepository
 import com.onboard.server.domain.service.createService
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
