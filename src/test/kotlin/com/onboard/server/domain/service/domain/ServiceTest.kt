@@ -1,7 +1,7 @@
 package com.onboard.server.domain.service.domain
 
 import com.onboard.server.domain.service.createService
-import com.onboard.server.domain.service.exception.ServiceCannotModifyException
+import com.onboard.server.domain.service.exception.CannotAccessServiceException
 import com.onboard.server.domain.team.createTeam
 import com.onboard.server.domain.team.domain.Subject
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -37,7 +37,7 @@ class ServiceTest : DescribeSpec({
             val service = createService(team)
 
             it("서비스를 수정할 수 없다") {
-                shouldThrow<ServiceCannotModifyException> {
+                shouldThrow<CannotAccessServiceException> {
                     service.modify(
                         subject = temporarySubject,
                         name = "onBoardV2",
@@ -63,7 +63,7 @@ class ServiceTest : DescribeSpec({
 
         context("본인이 생성한 서비스가 아니라면") {
             it("예외 발생한다") {
-                shouldThrow<ServiceCannotModifyException> {
+                shouldThrow<CannotAccessServiceException> {
                     service.checkMine(temporarySubject)
                 }
             }

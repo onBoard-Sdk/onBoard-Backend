@@ -1,7 +1,7 @@
 package com.onboard.server.domain.service.domain
 
 
-import com.onboard.server.domain.service.exception.ServiceCannotModifyException
+import com.onboard.server.domain.service.exception.CannotAccessServiceException
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.Team
 import com.onboard.server.global.entity.BaseEntity
@@ -50,6 +50,6 @@ class Service(
     }
 
     fun checkMine(subject: Subject) {
-        if (this.team.id != subject.id) throw ServiceCannotModifyException
+        if (this.team.id != subject.id) throw CannotAccessServiceException
     }
 }
