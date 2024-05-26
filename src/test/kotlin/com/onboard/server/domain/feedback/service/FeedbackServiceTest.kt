@@ -45,6 +45,7 @@ class FeedbackServiceTest : DescribeSpec() {
 
                 val request = WriteFeedbackRequest(
                     serviceId = savedService.id,
+                    path = "/home",
                     title = "뭔가 이상해요.",
                     content = "작동이 안됩니다"
                 )
@@ -60,6 +61,7 @@ class FeedbackServiceTest : DescribeSpec() {
                 val wrongServiceId = 0L
                 val request = WriteFeedbackRequest(
                     serviceId = wrongServiceId,
+                    path = "/home",
                     title = "뭔가 이상해요.",
                     content = "작동이 안됩니다"
                 )

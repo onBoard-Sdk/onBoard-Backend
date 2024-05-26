@@ -22,6 +22,9 @@ class Feedback(
     val service: Service,
 
     @Column(nullable = false)
+    val path: String,
+
+    @Column(nullable = false)
     val title: String,
 
     @Column(nullable = false)

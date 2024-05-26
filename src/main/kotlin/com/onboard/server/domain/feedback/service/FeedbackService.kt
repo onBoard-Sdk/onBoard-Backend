@@ -23,6 +23,7 @@ class FeedbackService(
         feedbackRepository.save(
             Feedback(
                 service = service,
+                path = request.path,
                 title = request.title,
                 content = request.content
             )
