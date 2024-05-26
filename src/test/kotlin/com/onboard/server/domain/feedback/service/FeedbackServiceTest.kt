@@ -1,17 +1,21 @@
 package com.onboard.server.domain.feedback.service
 
 import com.onboard.server.domain.feedback.controller.dto.WriteFeedbackRequest
+import com.onboard.server.domain.feedback.createFeedback
+import com.onboard.server.domain.feedback.domain.Feedback
 import com.onboard.server.domain.feedback.repository.FeedbackRepository
 import com.onboard.server.domain.service.createService
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.team.createTeam
+import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.repository.TeamRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.shouldBe
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -69,6 +73,31 @@ class FeedbackServiceTest : DescribeSpec() {
                 it("피드백을 작성할 수 없다") {
                     shouldThrow<ServiceNotFoundException> {
                         feedbackService.write(request)
+                    }
+                }
+            }
+        }
+
+        this.describe("getAll") {
+            context("서비스 아이디를 받으면") {
+                val savedTeam = teamRepository.save(createTeam())
+                val savedService = serviceRepository.save(createService(savedTeam))
+
+                feedbackRepository.saveAll(
+                    listOf(
+                        createFeedback(savedService), createFeedback(savedService)
+                    )
+                )
+
+                val subject = Subject(savedTeam.id)
+
+                it("서비스 피드백을 반환한다") {
+                    val response = feedbackService.getAll(subject, savedService.id)
+
+                    response.feedbacks[0].apply {
+                        path shouldBe "/home"
+                        title shouldBe "피드백 제목"
+                        content shouldBe "피드백 내용"
                     }
                 }
             }
