@@ -61,6 +61,9 @@ class SecurityConfig(
                     .requestMatchers(GET, "api/v1/guides/{guideId}/flows").permitAll()
                     .requestMatchers(GET, "api/v1/guides/pages").permitAll()
 
+                    // feedback
+                    .requestMatchers(POST, "api/v1/feedbacks").permitAll()
+
                     .anyRequest().denyAll()
             }
             .addFilterBefore(JwtFilter(jwtParser), UsernamePasswordAuthenticationFilter::class.java)
