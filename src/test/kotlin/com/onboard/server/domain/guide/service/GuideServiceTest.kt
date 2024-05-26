@@ -556,6 +556,7 @@ class GuideServiceTest : DescribeSpec() {
 
                 it("url 경로에 포함된 가이드 목록을 불러온다") {
                     val response = guideService.getAll(path)
+                    response.serviceId shouldBe savedService.id
 
                     response.guides[0].apply {
                         guideTitle shouldBe "title1"
