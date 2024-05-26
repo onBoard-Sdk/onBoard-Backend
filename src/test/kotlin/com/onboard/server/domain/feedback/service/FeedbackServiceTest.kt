@@ -4,6 +4,7 @@ import com.onboard.server.domain.feedback.controller.dto.WriteFeedbackRequest
 import com.onboard.server.domain.feedback.createFeedback
 import com.onboard.server.domain.feedback.repository.FeedbackRepository
 import com.onboard.server.domain.service.createService
+import com.onboard.server.domain.service.exception.CannotAccessServiceException
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.team.createTeam
@@ -33,6 +34,8 @@ class FeedbackServiceTest : DescribeSpec() {
 
     @Autowired
     private lateinit var teamRepository: TeamRepository
+
+    private val temporarySubject = Subject(-1)
 
     init {
         this.afterTest {
@@ -97,6 +100,29 @@ class FeedbackServiceTest : DescribeSpec() {
                         path shouldBe "/home"
                         title shouldBe "피드백 제목"
                         content shouldBe "피드백 내용"
+                    }
+                }
+            }
+
+            context("자신의 서비스가 아니면") {
+                val savedTeam = teamRepository.save(createTeam())
+                val savedService = serviceRepository.save(createService(savedTeam))
+
+                it("서비스 피드백을 반환받지 못한다") {
+                    shouldThrow<CannotAccessServiceException> {
+                        feedbackService.getAll(temporarySubject, savedService.id)
+                    }
+                }
+            }
+
+            context("서비스를 찾지 못하면") {
+                val savedTeam = teamRepository.save(createTeam())
+                val subject = Subject(savedTeam.id)
+
+                it("서비스 피드백을 반환받지 못한다") {
+                    shouldThrow<ServiceNotFoundException> {
+                        val wrongServiceId = 0L
+                        feedbackService.getAll(subject, wrongServiceId)
                     }
                 }
             }
