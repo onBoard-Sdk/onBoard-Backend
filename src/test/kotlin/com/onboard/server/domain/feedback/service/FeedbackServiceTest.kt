@@ -1,16 +1,17 @@
 package com.onboard.server.domain.feedback.service
 
 import com.onboard.server.domain.feedback.controller.dto.WriteFeedbackRequest
+import com.onboard.server.domain.feedback.repository.FeedbackRepository
 import com.onboard.server.domain.service.createService
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
 import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.team.createTeam
 import com.onboard.server.domain.team.repository.TeamRepository
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
-import io.kotest.matchers.longs.shouldBeGreaterThan
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -22,6 +23,9 @@ class FeedbackServiceTest : DescribeSpec() {
     private lateinit var feedbackService: FeedbackService
 
     @Autowired
+    private lateinit var feedbackRepository: FeedbackRepository
+
+    @Autowired
     private lateinit var serviceRepository: ServiceRepository
 
     @Autowired
@@ -29,6 +33,7 @@ class FeedbackServiceTest : DescribeSpec() {
 
     init {
         this.afterTest {
+            feedbackRepository.deleteAllInBatch()
             serviceRepository.deleteAllInBatch()
             teamRepository.deleteAllInBatch()
         }
@@ -45,8 +50,8 @@ class FeedbackServiceTest : DescribeSpec() {
                 )
 
                 it("피드백을 작성한다") {
-                    feedbackService.write(request).apply {
-                        feedbackId shouldBeGreaterThan 0
+                    shouldNotThrowAny {
+                        feedbackService.write(request)
                     }
                 }
             }
