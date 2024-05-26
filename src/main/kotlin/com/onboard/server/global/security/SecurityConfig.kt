@@ -63,6 +63,7 @@ class SecurityConfig(
 
                     // feedback
                     .requestMatchers(POST, "api/v1/feedbacks").permitAll()
+                    .requestMatchers(GET, "api/v1/feedbacks/{serviceId}").authenticated()
 
                     .anyRequest().denyAll()
             }
