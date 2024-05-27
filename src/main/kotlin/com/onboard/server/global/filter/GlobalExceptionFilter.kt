@@ -27,7 +27,7 @@ class GlobalExceptionFilter(
         } catch (e: BusinessException) {
             setErrorResponse(e.status, e.message, response)
         } catch (e: Exception) {
-            log.error("Error Message: {}", e.message)
+            log.error("Error Message: {}", e.printStackTrace())
             setErrorResponse(
                 status = InternalServerErrorException.status,
                 message = e.message ?: InternalServerErrorException.message,
