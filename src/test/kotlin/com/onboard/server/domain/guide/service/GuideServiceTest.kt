@@ -495,10 +495,8 @@ class GuideServiceTest : DescribeSpec() {
                     )
                 )
 
-                val subject = Subject(savedTeam.id)
-
                 it("가이드 및 가이드 요소 정보를 반환한다") {
-                    val response = guideService.getAllGuideElements(subject, savedGuide.id)
+                    val response = guideService.getAllGuideElements(savedGuide.id)
 
                     response.guide.apply {
                         guideTitle shouldBe "title1"
