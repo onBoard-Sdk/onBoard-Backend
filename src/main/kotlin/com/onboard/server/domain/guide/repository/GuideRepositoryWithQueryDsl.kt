@@ -37,8 +37,8 @@ class GuideRepositoryWithQueryDsl(
         return jpaQueryFactory
             .select(guide)
             .from(guide)
-            .leftJoin(guideElement)
-            .on(guide.eq(guideElement.guide))
+            .join(guideElement)
+            .on(guide.id.eq(guideElement.guide.id))
             .where(guide.id.eq(guideId))
             .transform(
                 groupBy(guide.id)
