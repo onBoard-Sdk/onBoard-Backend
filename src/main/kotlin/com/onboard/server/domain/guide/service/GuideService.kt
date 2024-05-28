@@ -2,8 +2,8 @@ package com.onboard.server.domain.guide.service
 
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideResponse
-import com.onboard.server.domain.guide.controller.dto.GetAllGuidesWithElementsResponse
 import com.onboard.server.domain.guide.controller.dto.GetAllGuidesResponse
+import com.onboard.server.domain.guide.controller.dto.GetAllGuidesWithElementsResponse
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
 import com.onboard.server.domain.guide.domain.Guide
@@ -12,8 +12,8 @@ import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
 import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.guide.repository.GuideRepository
-import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
+import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.team.domain.Subject
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -38,17 +38,15 @@ class GuideService(
             path = request.path,
         ).apply { checkMine(subject.id) }
 
-        request.guideElements
-            .map { it.sequence }
-            .apply { GuideElement.checkSequenceUnique(this) }
-
         val savedGuide = guideJpaRepository.save(guide)
 
+        var sequence = 0
         val guideElements = request.guideElements
             .map {
+                sequence++
                 GuideElement(
                     guide = savedGuide,
-                    sequence = it.sequence,
+                    sequence = sequence,
                     summary = it.emoji,
                     title = it.guideElementTitle,
                     description = it.description,

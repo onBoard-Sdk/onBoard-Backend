@@ -2,14 +2,9 @@ package com.onboard.server.domain.guide.controller.dto
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 
 data class GuideElementRequest(
-    @field:Positive
-    @field:NotNull
-    val sequence: Int,
-
     @field:Size(max = 191)
     val emoji: String?,
 

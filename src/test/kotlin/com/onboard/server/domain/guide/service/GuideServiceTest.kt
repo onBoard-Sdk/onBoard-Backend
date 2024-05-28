@@ -81,7 +81,6 @@ class GuideServiceTest : DescribeSpec() {
                     path = "/home",
                     guideElements = listOf(
                         GuideElementRequest(
-                            sequence = 1,
                             emoji = "이모지",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -91,7 +90,6 @@ class GuideServiceTest : DescribeSpec() {
                             length = 100
                         ),
                         GuideElementRequest(
-                            sequence = 2,
                             emoji = "이모지2",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -120,7 +118,6 @@ class GuideServiceTest : DescribeSpec() {
                     path = "/home",
                     guideElements = listOf(
                         GuideElementRequest(
-                            sequence = 1,
                             emoji = "이모지",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -130,7 +127,6 @@ class GuideServiceTest : DescribeSpec() {
                             length = 100
                         ),
                         GuideElementRequest(
-                            sequence = 2,
                             emoji = "이모지2",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -174,7 +170,6 @@ class GuideServiceTest : DescribeSpec() {
                     path = "/home",
                     guideElements = listOf(
                         GuideElementRequest(
-                            sequence = 1,
                             emoji = "이모지",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -184,7 +179,6 @@ class GuideServiceTest : DescribeSpec() {
                             length = 100
                         ),
                         GuideElementRequest(
-                            sequence = 2,
                             emoji = "이모지2",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -199,62 +193,6 @@ class GuideServiceTest : DescribeSpec() {
                 it("가이드를 생성할 수 없다") {
                     shouldThrow<CannotAccessGuideException> {
                         guideService.create(temporarySubject, request)
-                    }
-                }
-            }
-
-            context("가이드 요소의 순서에 중복이 발생하면") {
-                val savedTeam = teamRepository.save(
-                    Team(
-                        email = "email",
-                        password = "password",
-                        name = "name",
-                        logoImageUrl = "logoImageUrl"
-                    )
-                )
-
-                val savedService = serviceRepository.save(
-                    Service(
-                        team = savedTeam,
-                        name = "name",
-                        logoImageUrl = "logoImageUrl",
-                        serviceUrl = "serviceUrl",
-                    )
-                )
-
-                val request = CreateGuideRequest(
-                    serviceId = savedService.id,
-                    guideTitle = "홈 화면입니다.",
-                    path = "/home",
-                    guideElements = listOf(
-                        GuideElementRequest(
-                            sequence = 1,
-                            emoji = "이모지",
-                            guideElementTitle = "이건 버튼입니다.",
-                            description = "버튼을 클릭하면 이벤트가 발생합니다.",
-                            imageUrl = "imageUrl",
-                            shape = "가이드 박스 모양",
-                            width = 100,
-                            length = 100
-                        ),
-                        GuideElementRequest(
-                            sequence = 1,
-                            emoji = "이모지2",
-                            guideElementTitle = "이건 버튼입니다.",
-                            description = "버튼을 클릭하면 이벤트가 발생합니다.",
-                            imageUrl = "imageUrl",
-                            shape = "가이드 박스 모양",
-                            width = 100,
-                            length = 100
-                        )
-                    )
-                )
-
-                val subject = Subject(savedTeam.id)
-
-                it("가이드를 생성할 수 없다") {
-                    shouldThrow<CannotDuplicateSequenceException> {
-                        guideService.create(subject, request)
                     }
                 }
             }
