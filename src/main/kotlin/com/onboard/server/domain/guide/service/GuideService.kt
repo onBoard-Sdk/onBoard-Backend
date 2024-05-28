@@ -80,6 +80,7 @@ class GuideService(
 
     fun getAllGuideElements(guideId: Long): GetAllGuidesWithElementsResponse {
         val guidesWithElements = guideRepository.getAllWithElementsByGuideId(guideId)
+            ?.apply { guideElementVOs.sortWith(compareBy { it.sequence }) }
             ?: throw GuideNotFoundException
 
         return GetAllGuidesWithElementsResponse.from(guidesWithElements)
