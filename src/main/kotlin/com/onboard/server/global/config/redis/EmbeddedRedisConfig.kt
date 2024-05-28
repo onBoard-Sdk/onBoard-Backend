@@ -9,7 +9,7 @@ import redis.embedded.RedisServer
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-@Profile("!prod", "!local")
+@Profile("!prod")
 @Configuration
 class EmbeddedRedisConfig(
     @Value("\${spring.data.redis.port}")

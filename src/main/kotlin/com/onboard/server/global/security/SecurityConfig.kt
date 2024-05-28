@@ -28,13 +28,17 @@ class SecurityConfig(
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .csrf { it.disable() }
+            .headers { headers -> headers.frameOptions { frameOptions -> frameOptions.disable() } }
             .formLogin { it.disable() }
             .cors(Customizer.withDefaults())
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { authorize ->
                 authorize
                     // health check
-                    .requestMatchers(GET, "/health-check").permitAll()
+                    .requestMatchers(GET, "health-check").permitAll()
+
+                    // h2 console
+                    .requestMatchers("/h2-console/*").permitAll()
 
                     // auth
                     .requestMatchers(POST, "api/v1/auth/codes").permitAll()

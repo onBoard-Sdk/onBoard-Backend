@@ -43,6 +43,8 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:${property("querydslVersion")}:jakarta")
     kapt("jakarta.annotation:jakarta.annotation-api")
     kapt("jakarta.persistence:jakarta.persistence-api")
+    implementation("com.github.codemonstur:embedded-redis:${property("embeddedRedisVersion")}")
+    implementation("com.h2database:h2")
 
     // mail
 	implementation("org.springframework.boot:spring-boot-starter-mail")
@@ -67,8 +69,6 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:${property("kotestVersion")}")
     testImplementation("io.mockk:mockk:${property("mockkVersion")}")
     testImplementation("com.ninja-squad:springmockk:${property("springmockkVersion")}")
-    implementation("com.github.codemonstur:embedded-redis:${property("embeddedRedisVersion")}")
-    testRuntimeOnly("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {

@@ -4,21 +4,57 @@ spring:
       on-profile: local
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_URL:localhost}:${DB_PORT:3306}/${DB_NAME}?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/onboard;MODE=MySQL
+    username: username
+    password: password
+
+  h2:
+    console:
+      enabled: true
 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
+    open-in-view: false
 
   data:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ADDRESS:username}
+    password: ${EMAIL_PASSWORD:password}
+    default-encoding: UTF-8
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS:access-key}
+      secret-key: ${AWS_SECRET:secret-key}
+    region:
+      auto: false
+    stack:
+      auto: false
+    s3:
+      bucket: ${S3_BUCKET_NAME:bucket}
+
+jwt:
+  secret-key: ${SECRET_KEY:qwertyuiopasdfghjkl;zxcvbnm,qwertyuioasdfghjklzxcvbnm,asdfghjkqwertyuio}
+  access-exp: ${ACCESS_EXP:180}
+  refresh-exp: ${REFRESH_EXP:360}
