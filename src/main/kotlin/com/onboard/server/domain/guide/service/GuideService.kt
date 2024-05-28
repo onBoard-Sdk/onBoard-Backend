@@ -80,7 +80,7 @@ class GuideService(
         return GetAllGuidesResponse(guideVOs)
     }
 
-    fun getAllGuideElements(subject: Subject, guideId: Long): GetAllGuidesWithElementsResponse {
+    fun getAllGuideElements(guideId: Long): GetAllGuidesWithElementsResponse {
         val guidesWithElements = guideRepository.getAllWithElementsByGuideId(guideId)
             ?: throw GuideNotFoundException
 

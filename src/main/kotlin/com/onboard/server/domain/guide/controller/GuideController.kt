@@ -46,8 +46,8 @@ class GuideController(
         ApiResponse.ok(guideService.getAll(subject))
 
     @GetMapping("/{guideId}/flows")
-    fun getAllWithElements(subject: Subject, @PathVariable @NotNull guideId: Long): ApiResponse<GetAllGuidesWithElementsResponse> =
-        ApiResponse.ok(guideService.getAllGuideElements(subject, guideId))
+    fun getAllWithElements(@PathVariable @NotNull guideId: Long): ApiResponse<GetAllGuidesWithElementsResponse> =
+        ApiResponse.ok(guideService.getAllGuideElements(guideId))
 
     @GetMapping("/pages")
     fun getAll(@RequestParam @NotBlank path: String): ApiResponse<GetAllGuidesResponse> =
