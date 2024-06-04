@@ -44,7 +44,7 @@ dependencies {
     kapt("jakarta.annotation:jakarta.annotation-api")
     kapt("jakarta.persistence:jakarta.persistence-api")
     implementation("com.github.codemonstur:embedded-redis:${property("embeddedRedisVersion")}")
-    implementation("com.h2database:h2")
+    runtimeOnly("com.h2database:h2")
 
     // mail
 	implementation("org.springframework.boot:spring-boot-starter-mail")
