@@ -1,18 +1,18 @@
 package com.onboard.server.domain.guide.service
 
+import com.onboard.server.domain.guide.controller.dto.CreateGuideElementRequest
 import com.onboard.server.domain.guide.controller.dto.CreateGuideRequest
-import com.onboard.server.domain.guide.controller.dto.GuideElementRequest
+import com.onboard.server.domain.guide.controller.dto.UpdateGuideElementRequest
 import com.onboard.server.domain.guide.controller.dto.UpdateGuideRequest
 import com.onboard.server.domain.guide.domain.Guide
 import com.onboard.server.domain.guide.domain.GuideElement
 import com.onboard.server.domain.guide.domain.GuideElementJpaRepository
 import com.onboard.server.domain.guide.domain.GuideJpaRepository
 import com.onboard.server.domain.guide.exception.CannotAccessGuideException
-import com.onboard.server.domain.guide.exception.CannotDuplicateSequenceException
 import com.onboard.server.domain.guide.exception.GuideNotFoundException
 import com.onboard.server.domain.service.domain.Service
-import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.service.exception.ServiceNotFoundException
+import com.onboard.server.domain.service.repository.ServiceRepository
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.domain.team.domain.Team
 import com.onboard.server.domain.team.repository.TeamRepository
@@ -80,7 +80,7 @@ class GuideServiceTest : DescribeSpec() {
                     guideTitle = "홈 화면입니다.",
                     path = "/home",
                     guideElements = listOf(
-                        GuideElementRequest(
+                        CreateGuideElementRequest(
                             emoji = "이모지",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -89,7 +89,7 @@ class GuideServiceTest : DescribeSpec() {
                             width = 100,
                             length = 100
                         ),
-                        GuideElementRequest(
+                        CreateGuideElementRequest(
                             emoji = "이모지2",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -117,7 +117,7 @@ class GuideServiceTest : DescribeSpec() {
                     guideTitle = "홈 화면입니다.",
                     path = "/home",
                     guideElements = listOf(
-                        GuideElementRequest(
+                        CreateGuideElementRequest(
                             emoji = "이모지",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -126,7 +126,7 @@ class GuideServiceTest : DescribeSpec() {
                             width = 100,
                             length = 100
                         ),
-                        GuideElementRequest(
+                        CreateGuideElementRequest(
                             emoji = "이모지2",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -169,7 +169,7 @@ class GuideServiceTest : DescribeSpec() {
                     guideTitle = "홈 화면입니다.",
                     path = "/home",
                     guideElements = listOf(
-                        GuideElementRequest(
+                        CreateGuideElementRequest(
                             emoji = "이모지",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -178,7 +178,7 @@ class GuideServiceTest : DescribeSpec() {
                             width = 100,
                             length = 100
                         ),
-                        GuideElementRequest(
+                        CreateGuideElementRequest(
                             emoji = "이모지2",
                             guideElementTitle = "이건 버튼입니다.",
                             description = "버튼을 클릭하면 이벤트가 발생합니다.",
@@ -226,9 +226,48 @@ class GuideServiceTest : DescribeSpec() {
                     )
                 )
 
+                val saveAllGuideElements = guideElementJpaRepository.saveAll(
+                    listOf(
+                        GuideElement(
+                            guide = savedGuide,
+                            sequence = 1,
+                            summary = "이모지1",
+                            title = "이건 버튼입니다.1",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.1",
+                            guideElementImageUrl = "imageUrl1",
+                            shape = "가이드 박스 모양1",
+                            width = 100,
+                            length = 100
+                        ),
+                        GuideElement(
+                            guide = savedGuide,
+                            sequence = 2,
+                            summary = "이모지2",
+                            title = "이건 버튼입니다.2",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.2",
+                            guideElementImageUrl = "imageUrl2",
+                            shape = "가이드 박스 모양2",
+                            width = 200,
+                            length = 200
+                        )
+                    )
+                )
+
                 val request = UpdateGuideRequest(
                     guideTitle = "홈 화면이 업데이트되었습니다.",
                     path = "/home",
+                    guideElements = saveAllGuideElements.mapIndexed { index, guideElement ->
+                        UpdateGuideElementRequest(
+                            guideElementId = guideElement.id,
+                            emoji = "수정된 이모지${index}",
+                            guideElementTitle = "수정된 이건 버튼입니다.${index}",
+                            description = "수정된  버튼을 클릭하면 이벤트가 발생합니다.${index}",
+                            imageUrl = "수정된 imageUrl${index}",
+                            shape = "수정된 가이드 박스 모양${index}",
+                            width = 300,
+                            length = 300
+                        )
+                    }
                 )
 
                 val subject = Subject(savedTeam.id)
@@ -241,6 +280,10 @@ class GuideServiceTest : DescribeSpec() {
                         it.getPath shouldBe "/home"
                     }
 
+                    guideElementJpaRepository.findAllByGuideId(savedGuide.id).mapIndexed { index, guideElement ->
+                        guideElement.getTitle shouldBe "수정된 이건 버튼입니다.${index}"
+                        guideElement.getDescription shouldBe "수정된  버튼을 클릭하면 이벤트가 발생합니다.${index}"
+                    }
                 }
             }
 
@@ -274,6 +317,28 @@ class GuideServiceTest : DescribeSpec() {
                 val request = UpdateGuideRequest(
                     guideTitle = "홈 화면이 업데이트되었습니다.",
                     path = "/home",
+                    guideElements = listOf(
+                        UpdateGuideElementRequest(
+                            guideElementId = 1,
+                            emoji = "이모지",
+                            guideElementTitle = "이건 버튼입니다.",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.",
+                            imageUrl = "imageUrl",
+                            shape = "가이드 박스 모양",
+                            width = 100,
+                            length = 100
+                        ),
+                        UpdateGuideElementRequest(
+                            guideElementId = 2,
+                            emoji = "이모지2",
+                            guideElementTitle = "이건 버튼입니다.",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.",
+                            imageUrl = "imageUrl",
+                            shape = "가이드 박스 모양",
+                            width = 100,
+                            length = 100
+                        )
+                    ),
                 )
 
                 val subject = Subject(savedTeam.id)
@@ -315,6 +380,28 @@ class GuideServiceTest : DescribeSpec() {
                 val request = UpdateGuideRequest(
                     guideTitle = "홈 화면이 업데이트되었습니다.",
                     path = "/home",
+                    guideElements = listOf(
+                        UpdateGuideElementRequest(
+                            guideElementId = 1,
+                            emoji = "이모지",
+                            guideElementTitle = "이건 버튼입니다.",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.",
+                            imageUrl = "imageUrl",
+                            shape = "가이드 박스 모양",
+                            width = 100,
+                            length = 100
+                        ),
+                        UpdateGuideElementRequest(
+                            guideElementId = 2,
+                            emoji = "이모지2",
+                            guideElementTitle = "이건 버튼입니다.",
+                            description = "버튼을 클릭하면 이벤트가 발생합니다.",
+                            imageUrl = "imageUrl",
+                            shape = "가이드 박스 모양",
+                            width = 100,
+                            length = 100
+                        )
+                    ),
                 )
 
                 it("가이드를 수정할 수 없다") {
