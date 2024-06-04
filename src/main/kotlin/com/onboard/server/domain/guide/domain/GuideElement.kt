@@ -49,4 +49,28 @@ class GuideElement(
                 throw CannotDuplicateSequenceException
         }
     }
+
+    val getSequence
+        get() = sequence
+
+    val getSummary
+        get() = summary
+
+    val getTitle
+        get() = title
+
+    val getDescription
+        get() = description
+
+    val getGuideElementImageUrl
+        get() = guideElementImageUrl
+
+    val getShape
+        get() = shape
+
+    val getWidth
+        get() = width
+
+    val getLength
+        get() = length
 }
