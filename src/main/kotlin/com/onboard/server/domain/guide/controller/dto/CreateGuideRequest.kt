@@ -2,6 +2,7 @@ package com.onboard.server.domain.guide.controller.dto
 
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
@@ -19,6 +20,7 @@ data class CreateGuideRequest(
     @field:NotBlank
     val path: String,
 
+    @field:NotEmpty
     @field:Valid
-    val guideElements: List<GuideElementRequest>,
+    val guideElements: List<CreateGuideElementRequest>,
 )
