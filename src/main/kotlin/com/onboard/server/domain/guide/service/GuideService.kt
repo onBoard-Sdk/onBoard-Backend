@@ -56,7 +56,6 @@ class GuideService(
                     length = it.length
                 )
             }
-
         guideElementJpaRepository.saveAll(guideElements)
 
         return CreateGuideResponse(savedGuide.id)
@@ -65,10 +64,31 @@ class GuideService(
     @Transactional
     fun modify(subject: Subject, guideId: Long, request: UpdateGuideRequest): UpdateGuideResponse {
         val guide = guideJpaRepository.findByIdOrNull(guideId)
-            ?.apply { checkMine(subject.id) }
-            ?: throw GuideNotFoundException
+            ?.apply {
+                checkMine(subject.id)
+                update(request.guideTitle, request.path)
+            } ?: throw GuideNotFoundException
 
-        guide.update(request.guideTitle, request.path)
+        val savedGuideElements = guideElementJpaRepository.findAllByGuideId(guideId)
+        guideElementJpaRepository.deleteAll(savedGuideElements)
+
+        var sequence = 0
+        val guideElements = request.guideElements
+            .map {
+                sequence++
+                GuideElement(
+                    guide = guide,
+                    sequence = sequence,
+                    summary = it.emoji,
+                    title = it.guideElementTitle,
+                    description = it.description,
+                    guideElementImageUrl = it.imageUrl,
+                    shape = it.shape,
+                    width = it.width,
+                    length = it.length
+                )
+            }
+        guideElementJpaRepository.saveAll(guideElements)
 
         return UpdateGuideResponse(guide.id)
     }
