@@ -9,6 +9,7 @@ import com.onboard.server.domain.guide.controller.dto.UpdateGuideResponse
 import com.onboard.server.domain.guide.service.GuideService
 import com.onboard.server.domain.team.domain.Subject
 import com.onboard.server.global.common.ApiResponse
+import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import org.springframework.http.HttpStatus
@@ -38,7 +39,7 @@ class GuideController(
     fun modify(
         subject: Subject,
         @PathVariable @NotNull guideId: Long,
-        @RequestBody request: UpdateGuideRequest,
+        @RequestBody @Valid request: UpdateGuideRequest,
     ): ApiResponse<UpdateGuideResponse> = ApiResponse.ok(guideService.modify(subject, guideId, request))
 
     @GetMapping
