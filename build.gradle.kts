@@ -60,6 +60,10 @@ dependencies {
     // aws
     implementation("com.amazonaws:aws-java-sdk-s3:${property("s3Version")}")
 
+    // logging
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+
     // test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")

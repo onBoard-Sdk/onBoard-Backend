@@ -34,8 +34,8 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { authorize ->
                 authorize
-                    // health check
-                    .requestMatchers(GET, "health-check").permitAll()
+                    // actuator
+                    .requestMatchers(GET, "/actuator/*").permitAll()
 
                     // h2 console
                     .requestMatchers("/h2-console/*").permitAll()

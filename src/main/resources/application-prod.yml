@@ -35,6 +35,12 @@ spring:
           starttls:
             enable: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${INCLUDE_ENDPOINTS}
+
 cloud:
   aws:
     credentials:
