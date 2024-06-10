@@ -1,6 +1,7 @@
 package com.onboard.server.global.common
 
 import com.onboard.server.domain.team.domain.Subject
+import com.onboard.server.global.exception.UnauthorizedException
 import com.onboard.server.global.security.jwt.JwtParser
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
@@ -25,10 +26,11 @@ class UserArgumentResolver(
     ): Any {
         val request = webRequest.nativeRequest as HttpServletRequest
 
-        val userId = jwtParser.getToken(request)?.let {
-            jwtParser.getSubject(it)
-        }
+        val userId = jwtParser.getToken(request)
+            ?.let {
+                jwtParser.getSubject(it)
+            } ?: throw UnauthorizedException
 
-        return Subject(userId!!)
+        return Subject(userId)
     }
 }
