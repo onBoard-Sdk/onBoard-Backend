@@ -53,4 +53,8 @@ class GuideController(
     @GetMapping("/pages")
     fun getAll(@RequestParam @NotBlank path: String): ApiResponse<GetAllGuidesResponse> =
         ApiResponse.ok(guideService.getAll(path))
+
+    @GetMapping("/{serviceId}")
+    fun getAll(@PathVariable serviceId: Long):  ApiResponse<GetAllGuidesResponse> =
+        ApiResponse.ok(guideService.getAll(serviceId))
 }

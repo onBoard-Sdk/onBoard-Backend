@@ -64,6 +64,7 @@ class SecurityConfig(
                     .requestMatchers(GET, "api/v1/guides").authenticated()
                     .requestMatchers(GET, "api/v1/guides/{guideId}/flows").permitAll()
                     .requestMatchers(GET, "api/v1/guides/pages").permitAll()
+                    .requestMatchers(GET, "api/v1/guides/{serviceId}}").permitAll()
 
                     // feedback
                     .requestMatchers(POST, "api/v1/feedbacks").permitAll()
