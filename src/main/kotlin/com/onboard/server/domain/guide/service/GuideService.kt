@@ -111,8 +111,8 @@ class GuideService(
         return GetAllGuidesResponse.from(guides)
     }
 
-    fun getAll(serviceId: Long): GetAllGuidesResponse {
-        val guides = guideJpaRepository.findAllByServiceId(serviceId)
+    fun getAll(serviceId: Long, path: String): GetAllGuidesResponse {
+        val guides = guideJpaRepository.findAllByServiceIdAndPath(serviceId, path)
         return GetAllGuidesResponse.from(guides)
     }
 }
